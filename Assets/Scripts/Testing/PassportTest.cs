@@ -4,7 +4,6 @@ using System.Reflection;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
-using UnityEditor.UI;
 
 public class PassportTest : MonoBehaviour
 {
