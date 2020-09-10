@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerTeamTest : MonoBehaviour
 {
     TeamTesting manager;
-    public TeamTesting.PlayerTeams myTeam;
+    public TeamTesting.TestingTeams myTeam;
     public GameObject MAURMustache;
     MeshFilter mesh;
 
@@ -22,19 +22,19 @@ public class PlayerTeamTest : MonoBehaviour
         int role = Random.Range(0, 3);
         if (role == 0)
         {
-            myTeam = TeamTesting.PlayerTeams.police;
+            myTeam = TeamTesting.TestingTeams.police;
             mesh.mesh = manager.teamMeshes[0];
             mainCam.cullingMask = normalMask;
         }
         else if (role == 1)
         {
-            myTeam = TeamTesting.PlayerTeams.civillian;
+            myTeam = TeamTesting.TestingTeams.civillian;
             mesh.mesh = manager.teamMeshes[1];
             mainCam.cullingMask = normalMask;
         }
         else
         {
-            myTeam = TeamTesting.PlayerTeams.spy;
+            myTeam = TeamTesting.TestingTeams.spy;
             mesh.mesh = manager.teamMeshes[1];
             mainCam.cullingMask = spyMask;
             MAURMustache.SetActive(true);
@@ -44,6 +44,5 @@ public class PlayerTeamTest : MonoBehaviour
     void Start()
     {
         manager.AddToList(this);
-
     }
 }

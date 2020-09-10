@@ -1,34 +1,40 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
 using UnityEngine;
-using TMPro;
 using UnityEngine.UI;
+using TMPro;
+using Mirror;
 
-public class PassportTest : MonoBehaviour
+public class PlayerUI : NetworkBehaviour
 {
-    public PlayerTeamTest playerParent;
+    public PlayerTeam playerParent;
 
     public RawImage passBack;
     public TextMeshProUGUI nameText, roleText;
+    public Canvas myCanvas;
 
     public List<Texture> passports;
     public string[] names;
     public string[] roleName;
     public Color[] roleColors;
 
-    void Start()
+    public void MakeUI()
     {
+        myCanvas = GetComponentInParent<Canvas>();
+        //if (!GetComponentInParent<PlayerMovement>().isLocalPlayer)
+        //{
+        //    myCanvas.gameObject.SetActive(false);
+        //}
         //playerParent = GetComponentInParent<PlayerTeamTest>();
         switch (playerParent.myTeam)
         {
-            case TeamTesting.TestingTeams.police:
+            case TeamManager.PlayerTeams.police:
                 MakePassPort(0);
                 break;
-            case TeamTesting.TestingTeams.civillian:
+            case TeamManager.PlayerTeams.civillian:
                 MakePassPort(1);
                 break;
-            case TeamTesting.TestingTeams.spy:
+            case TeamManager.PlayerTeams.spy:
                 MakePassPort(2);
                 break;
         }
@@ -39,6 +45,6 @@ public class PassportTest : MonoBehaviour
         passBack.texture = passports[role];
         roleText.text = roleName[role];
         roleText.color = roleColors[role];
-        nameText.text = names[Random.Range(0, names.Length + 1)];
+        nameText.text = names[Random.Range(0, names.Length)];
     }
 }

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class TeamTesting : MonoBehaviour
 {
-    public enum PlayerTeams { police, civillian, spy};
+    public enum TestingTeams { police, civillian, spy};
 
     public List<MovementTest> policePlayers = new List<MovementTest>();
     public List<MovementTest> civillianPlayers = new List<MovementTest>();
@@ -16,13 +16,13 @@ public class TeamTesting : MonoBehaviour
     {
         switch (playerToAdd.myTeam)
         {
-            case PlayerTeams.police:
+            case TestingTeams.police:
                 policePlayers.Add(playerToAdd.GetComponentInParent<MovementTest>());
                 break;
-            case PlayerTeams.civillian:
+            case TestingTeams.civillian:
                 civillianPlayers.Add(playerToAdd.GetComponentInParent<MovementTest>());
                 break;
-            case PlayerTeams.spy:
+            case TestingTeams.spy:
                 spyPlayers.Add(playerToAdd.GetComponentInParent<MovementTest>());
                 break;
         }
