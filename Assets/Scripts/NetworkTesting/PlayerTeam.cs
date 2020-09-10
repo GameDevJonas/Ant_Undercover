@@ -23,11 +23,6 @@ public class PlayerTeam : NetworkBehaviour
     [SyncVar]
     public bool isReady;
 
-    public override void OnStartClient()
-    {
-
-    }
-
     private void Awake()
     {
         isReady = false;
@@ -91,6 +86,8 @@ public class PlayerTeam : NetworkBehaviour
             myCam.cullingMask = spyMask;
             MAURMustache.SetActive(true);
         }
+        SyncRoleWithClient(myTeam);
+        manager.AddToList(this);
     }
 
     [ClientRpc]
@@ -119,8 +116,23 @@ public class PlayerTeam : NetworkBehaviour
         }
     }
 
+    public void SyncAll()
+    {
+        if (isLocalPlayer)
+        {
+            SyncRoleWithServer(myTeam);
+        }
+    }
+
     public override void OnStopClient()
     {
+        //manager.CheckForNullRefs();
+        manager.playersReady.Remove(this);
+    }
+
+    public override void OnStopServer()
+    {
+        //manager.CheckForNullRefs();
         manager.playersReady.Remove(this);
     }
 
@@ -131,8 +143,11 @@ public class PlayerTeam : NetworkBehaviour
             MAURMustache.SetActive(false);
             myTeam = TeamManager.PlayerTeams.police;
             mesh.mesh = manager.teamMeshes[0];
-            SyncRoleWithServer(myTeam);
-            SyncRoleWithClient(myTeam);
+            if (isLocalPlayer)
+            {
+                SyncRoleWithServer(myTeam);
+                SyncRoleWithClient(myTeam);
+            }
             ui.MakeUI();
             myCam.cullingMask = normalMask;
         }
@@ -145,8 +160,11 @@ public class PlayerTeam : NetworkBehaviour
             MAURMustache.SetActive(false);
             myTeam = TeamManager.PlayerTeams.civillian;
             mesh.mesh = manager.teamMeshes[1];
-            SyncRoleWithServer(myTeam);
-            SyncRoleWithClient(myTeam);
+            if (isLocalPlayer)
+            {
+                SyncRoleWithServer(myTeam);
+                SyncRoleWithClient(myTeam);
+            }
             ui.MakeUI();
             myCam.cullingMask = normalMask;
         }
@@ -158,17 +176,15 @@ public class PlayerTeam : NetworkBehaviour
         {
             myTeam = TeamManager.PlayerTeams.spy;
             mesh.mesh = manager.teamMeshes[1];
-            SyncRoleWithServer(myTeam);
-            SyncRoleWithClient(myTeam);
+            if (isLocalPlayer)
+            {
+                SyncRoleWithServer(myTeam);
+                SyncRoleWithClient(myTeam);
+            }
             ui.MakeUI();
             MAURMustache.SetActive(true);
             myCam.cullingMask = spyMask;
         }
-    }
-
-    void Start()
-    {
-        manager.AddToList(this);
     }
 
     private void Update()
