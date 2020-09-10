@@ -6,6 +6,8 @@ using Cinemachine;
 
 public class PlayerMovement : NetworkBehaviour
 {
+    TeamManager manager;
+
     private CharacterController controller;
     private Vector3 playerVelocity;
     private bool groundedPlayer;
@@ -24,6 +26,7 @@ public class PlayerMovement : NetworkBehaviour
 
     private void Start()
     {
+        manager = FindObjectOfType<TeamManager>();
         cam = GetComponentInChildren<CinemachineFreeLook>();
         if (!isLocalPlayer)
         {
@@ -31,6 +34,11 @@ public class PlayerMovement : NetworkBehaviour
             GetComponentInChildren<Canvas>().gameObject.SetActive(false);
         }
         controller = gameObject.GetComponent<CharacterController>();
+    }
+
+    public override void OnStopClient()
+    {
+        manager.playersConnected.Remove(this);
     }
 
     void Update()

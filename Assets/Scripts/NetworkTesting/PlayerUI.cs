@@ -20,7 +20,7 @@ public class PlayerUI : NetworkBehaviour
 
     public void MakeUI()
     {
-        myCanvas = GetComponentInParent<Canvas>();
+        myCanvas = GetComponentInChildren<Canvas>();
         //if (!GetComponentInParent<PlayerMovement>().isLocalPlayer)
         //{
         //    myCanvas.gameObject.SetActive(false);

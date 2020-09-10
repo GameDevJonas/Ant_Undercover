@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TeamManager : NetworkBehaviour
+public class TeamManager : MonoBehaviour
 {
     public enum PlayerTeams { police, civillian, spy };
 
@@ -61,6 +61,11 @@ public class TeamManager : NetworkBehaviour
                 }
             }
         }
+
+        if(playersReady.Count < 1)
+        {
+            gameStarted = false;
+        }
     }
 
     void StartGame()
@@ -82,8 +87,6 @@ public class TeamManager : NetworkBehaviour
                     break;
             }
         }
-        
-        
         gameStarted = true;
     }
 }

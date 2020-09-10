@@ -217,57 +217,6 @@ MonoBehaviour:
   m_CameraActivatedEvent:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &5685002514141437547
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6331082400438657910}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sceneId: 0
-  serverOnly: 0
-  m_AssetId: 
-  hasSpawned: 0
---- !u!114 &7577890013448498048
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6331082400438657910}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f5815b4a752129547a3e964860bfb9c6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.1
-  playerParent: {fileID: 7090140071865211452}
-  passBack: {fileID: 6331082399700886966}
-  nameText: {fileID: 6331082399437259292}
-  roleText: {fileID: 6331082400399679185}
-  myCanvas: {fileID: 1032120089}
-  passports:
-  - {fileID: 2800000, guid: 7eb5d5d38853684418cf267d6695e0ac, type: 3}
-  - {fileID: 2800000, guid: 5a96cd394a37b78448a001f21855aa30, type: 3}
-  - {fileID: 2800000, guid: bd9c0d3c824cc14479b62f529066b729, type: 3}
-  names:
-  - Bob
-  - "K\xE5re"
-  - Else
-  roleName:
-  - Police
-  - Worker
-  - Spy
-  roleColors:
-  - {r: 0.19215682, g: 0.3230823, b: 0.83137256, a: 1}
-  - {r: 0.26415092, g: 0.26415092, b: 0.26415092, a: 1}
-  - {r: 0.8301887, g: 0.19188325, b: 0.19188325, a: 1}
 --- !u!1 &6682506257397864881
 GameObject:
   m_ObjectHideFlags: 0
@@ -311,10 +260,11 @@ GameObject:
   - component: {fileID: 8383486503803045125}
   - component: {fileID: 8383486503803045120}
   - component: {fileID: 8383486503803045124}
-  - component: {fileID: 3277116409312433520}
   - component: {fileID: 7267532900266605429}
   - component: {fileID: -56233377095827020}
+  - component: {fileID: 3277116409312433520}
   - component: {fileID: 7090140071865211452}
+  - component: {fileID: 6260374942472504183}
   m_Layer: 0
   m_Name: PlayerTest Network New New
   m_TagString: Untagged
@@ -370,28 +320,6 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0.17, z: 0.09}
---- !u!114 &3277116409312433520
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8383486503803045121}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 04ebb3a6130c04e4d914a7534de074cc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.1
-  playerSpeed: 2
-  jumpHeight: 3
-  gravityValue: -9.81
-  turnSpeed: 4
-  xInput: 0
-  yInput: 0
-  model: {fileID: 8383486503339625354}
-  cam: {fileID: 0}
 --- !u!114 &7267532900266605429
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -426,6 +354,28 @@ MonoBehaviour:
   localPositionSensitivity: 0.01
   localRotationSensitivity: 0.01
   localScaleSensitivity: 0.01
+--- !u!114 &3277116409312433520
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8383486503803045121}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04ebb3a6130c04e4d914a7534de074cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  playerSpeed: 2
+  jumpHeight: 3
+  gravityValue: -9.81
+  turnSpeed: 4
+  xInput: 0
+  yInput: 0
+  model: {fileID: 8383486503339625354}
+  cam: {fileID: 0}
 --- !u!114 &7090140071865211452
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -441,8 +391,9 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   myTeam: 0
-  ui: {fileID: 7577890013448498048}
+  ui: {fileID: 6260374942472504183}
   MAURMustache: {fileID: 1051974741145502280}
+  myCam: {fileID: 1165768501}
   normalMask:
     serializedVersion: 2
     m_Bits: 311
@@ -450,6 +401,63 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   isReady: 0
+--- !u!114 &6260374942472504183
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8383486503803045121}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5815b4a752129547a3e964860bfb9c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  playerParent: {fileID: 7090140071865211452}
+  passBack: {fileID: 6331082399700886966}
+  nameText: {fileID: 6331082399437259292}
+  roleText: {fileID: 6331082400399679185}
+  myCanvas: {fileID: 1032120089}
+  passports:
+  - {fileID: 2800000, guid: 7eb5d5d38853684418cf267d6695e0ac, type: 3}
+  - {fileID: 2800000, guid: 5a96cd394a37b78448a001f21855aa30, type: 3}
+  - {fileID: 2800000, guid: bd9c0d3c824cc14479b62f529066b729, type: 3}
+  names:
+  - Anthony
+  - Maurius
+  - Anton
+  - Mauriel
+  - Immauriel K. Ant
+  - Maurice
+  - Maurio
+  - Antone
+  - Antonette
+  - Maurielle Antonette
+  - Maura
+  - Else Maurit
+  - Maurianne
+  - Fatimant
+  - Mohamaur
+  - Hermant
+  - Hjalmaur
+  - Adriant
+  - Antdreas
+  - Theant
+  - Jonant
+  - Amandaur
+  - Antrea
+  - Mauricio
+  - Maurus
+  roleName:
+  - Police
+  - Worker
+  - Spy
+  roleColors:
+  - {r: 0.19215682, g: 0.3230823, b: 0.83137256, a: 1}
+  - {r: 0.26415092, g: 0.26415092, b: 0.26415092, a: 1}
+  - {r: 0.8301887, g: 0.19188325, b: 0.19188325, a: 1}
 --- !u!1001 &4073978059334935291
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -539,11 +547,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7384801842644219157, guid: 5da62aa777f88c244bdba67e0e11a7b2, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.055306926
+      value: 0.055306893
       objectReference: {fileID: 0}
     - target: {fileID: 7384801842644219157, guid: 5da62aa777f88c244bdba67e0e11a7b2, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.012818567
+      value: -0.012818558
       objectReference: {fileID: 0}
     - target: {fileID: 7384801842644219157, guid: 5da62aa777f88c244bdba67e0e11a7b2, type: 3}
       propertyPath: m_LocalPosition.y
@@ -555,19 +563,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7384801842644219157, guid: 5da62aa777f88c244bdba67e0e11a7b2, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.22542222
+      value: 0.22542223
       objectReference: {fileID: 0}
     - target: {fileID: 7384801842644219157, guid: 5da62aa777f88c244bdba67e0e11a7b2, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.9726056
+      value: 0.97260565
       objectReference: {fileID: 0}
     - target: {fileID: 7384801842806116883, guid: 5da62aa777f88c244bdba67e0e11a7b2, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.054804757
+      value: 0.05480474
       objectReference: {fileID: 0}
     - target: {fileID: 7384801842806116883, guid: 5da62aa777f88c244bdba67e0e11a7b2, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.014819118
+      value: -0.014819115
       objectReference: {fileID: 0}
     - target: {fileID: 7384801842806116883, guid: 5da62aa777f88c244bdba67e0e11a7b2, type: 3}
       propertyPath: m_LocalRotation.x
@@ -727,11 +735,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 05625b4c06d1a5b4f809ef7336b5f465, type: 3}
---- !u!1 &6331082400438657910 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8022362926272367573, guid: 05625b4c06d1a5b4f809ef7336b5f465, type: 3}
-  m_PrefabInstance: {fileID: 4073978059955759267}
-  m_PrefabAsset: {fileID: 0}
 --- !u!224 &6331082400438657905 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8022362926272367570, guid: 05625b4c06d1a5b4f809ef7336b5f465, type: 3}
@@ -839,9 +842,9 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7d9d5ba31c03fb045b9af18b2a93c9bf, type: 3}
---- !u!1 &1051974741145502280 stripped
+--- !u!1 &8383486503339625354 stripped
 GameObject:
-  m_CorrespondingSourceObject: {fileID: 5582705265579154345, guid: 7d9d5ba31c03fb045b9af18b2a93c9bf, type: 3}
+  m_CorrespondingSourceObject: {fileID: 4015167042548273771, guid: 7d9d5ba31c03fb045b9af18b2a93c9bf, type: 3}
   m_PrefabInstance: {fileID: 4891082541381261793}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &8383486503339625353 stripped
@@ -849,8 +852,8 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4015167042548273768, guid: 7d9d5ba31c03fb045b9af18b2a93c9bf, type: 3}
   m_PrefabInstance: {fileID: 4891082541381261793}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &8383486503339625354 stripped
+--- !u!1 &1051974741145502280 stripped
 GameObject:
-  m_CorrespondingSourceObject: {fileID: 4015167042548273771, guid: 7d9d5ba31c03fb045b9af18b2a93c9bf, type: 3}
+  m_CorrespondingSourceObject: {fileID: 5582705265579154345, guid: 7d9d5ba31c03fb045b9af18b2a93c9bf, type: 3}
   m_PrefabInstance: {fileID: 4891082541381261793}
   m_PrefabAsset: {fileID: 0}
