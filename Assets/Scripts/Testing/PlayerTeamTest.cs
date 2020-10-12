@@ -18,7 +18,9 @@ public class PlayerTeamTest : MonoBehaviour
         MAURMustache.SetActive(false);
         mainCam = Camera.main;
         mesh = GetComponentInChildren<MeshFilter>();
+        Debug.Log(mesh, mesh.gameObject);
         manager = FindObjectOfType<TeamTesting>();
+        Debug.Log(manager, manager.gameObject);
         int role = Random.Range(0, 3);
         if (role == 0)
         {
