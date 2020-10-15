@@ -14,9 +14,10 @@ public class PlayerTestingTask : MonoBehaviour
     public GameObject objectHolding;
 
     public TestingPile currentPile;
-    public TestingGoal currentGoal;
+    //public TestingGoal currentGoal;
+    public TestingGoalVTwo currentGoal;
 
-    public string holding;
+    public string holding, myRole;
 
     void Start()
     {
@@ -27,6 +28,8 @@ public class PlayerTestingTask : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        myRole = GetComponentInChildren<PlayerTeamTest>().myTeam.ToString();
+
         PickUpRelease();
         PlaceObjectOnGoal();
         SabotageUpdate();
@@ -64,19 +67,33 @@ public class PlayerTestingTask : MonoBehaviour
 
     void PlaceObjectOnGoal()
     {
-        if (holdingItem && canDeliver && Input.GetKeyDown(KeyCode.E) && currentGoal.objectsPlaced < 6 && !currentGoal.spyInRange)
+        /*
+            if (holdingItem && canDeliver && Input.GetKeyDown(KeyCode.E) && currentGoal.objectsPlaced < currentGoal.maxObjects && !currentGoal.spyInRange)
+            {
+                holding = null;
+                objectHolding.GetComponent<Rigidbody>().isKinematic = false;
+                objectHolding.transform.SetParent(null);
+                Destroy(objectHolding, .5f);
+                objectHolding = null;
+                currentGoal.PlaceObject();
+                canDeliver = false;
+                holdingItem = false;
+            }
+        */
+        /*if (holdingItem && canDeliver && Input.GetKeyDown(KeyCode.E) && currentGoal.objectsPlaced < currentGoal.objectsNeeded && !currentGoal.spyInRange)
         {
             holding = null;
             objectHolding.GetComponent<Rigidbody>().isKinematic = false;
             objectHolding.transform.SetParent(null);
             Destroy(objectHolding, .5f);
             objectHolding = null;
-            currentGoal.PlaceObject();
+            //currentGoal.PlaceObject();
             canDeliver = false;
             holdingItem = false;
         }
-        else if (holdingItem && canDeliver && Input.GetKeyDown(KeyCode.E) && currentGoal.spyInRange)
+        else*/ if (holdingItem && canDeliver && Input.GetKeyDown(KeyCode.E) /*&& currentGoal.spyInRange*/)
         {
+            currentGoal.PlayerGiveItem(holding, myRole);
             holding = null;
             objectHolding.GetComponent<Rigidbody>().isKinematic = false;
             objectHolding.transform.SetParent(null);
@@ -130,10 +147,20 @@ public class PlayerTestingTask : MonoBehaviour
                 canPickUp = true;
             }
         }
+        /*
         if (other.gameObject.GetComponent<TestingGoal>())
         {
             currentGoal = other.gameObject.GetComponent<TestingGoal>();
             if (holdingItem && holding == other.gameObject.GetComponent<TestingGoal>().need && other.gameObject.GetComponent<TestingGoal>().objectsPlaced < 6 && !other.gameObject.GetComponent<TestingGoal>().sabotaged)
+            {
+                canDeliver = true;
+            }
+        }
+        */
+        if (other.gameObject.GetComponent<TestingGoalVTwo>())
+        {
+            currentGoal = other.gameObject.GetComponent<TestingGoalVTwo>();
+            if (holdingItem && holding == other.gameObject.GetComponent<TestingGoalVTwo>().whatDoINeed /* && other.gameObject.GetComponent<TestingGoalVTwo>().objectsPlaced < other.gameObject.GetComponent<TestingGoalVTwo>().objectsNeeded && !other.gameObject.GetComponent<TestingGoalVTwo>().sabotaged*/)
             {
                 canDeliver = true;
             }
@@ -147,7 +174,14 @@ public class PlayerTestingTask : MonoBehaviour
             canPickUp = false;
             currentPile = null;
         }
+        /*
         if (other.gameObject.GetComponent<TestingGoal>() && holdingItem)
+        {
+            canDeliver = false;
+            currentGoal = null;
+        }
+        */
+        if (other.gameObject.GetComponent<TestingGoalVTwo>() && holdingItem)
         {
             canDeliver = false;
             currentGoal = null;
