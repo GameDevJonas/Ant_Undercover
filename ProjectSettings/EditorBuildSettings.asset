@@ -5,7 +5,10 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/NetworkingPostTest.unity
     guid: 97aae4675a85a7248b3d6c20876e5255
+  - enabled: 1
+    path: Assets/Scenes/NetworkingTasks.unity
+    guid: 038c1a5c08e6c8a449c4ae8fc7eb5735
   m_configObjects: {}

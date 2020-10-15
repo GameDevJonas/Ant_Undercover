@@ -16,11 +16,14 @@ public class TeamManager : MonoBehaviour
 
     public Mesh[] teamMeshes;
 
-    public bool gameStarted;
+    public bool gameStarted, pickedRole;
+
+    public int role;
 
     private void Start()
     {
         gameStarted = false;
+        pickedRole = false;
     }
 
     public void AddToList(PlayerTeam playerToAdd)
@@ -44,7 +47,7 @@ public class TeamManager : MonoBehaviour
         CheckForReadyPlayers();
         CheckForNullRefs();
 
-        if(!gameStarted && playersConnected.Count == playersReady.Count && playersConnected.Count > 0)
+        if (!gameStarted && playersConnected.Count == playersReady.Count && playersConnected.Count > 0)
         {
             StartGame();
         }
@@ -57,7 +60,7 @@ public class TeamManager : MonoBehaviour
 
     public void CheckForNullRefs()
     {
-        foreach(GameObject player in policePlayers)
+        foreach (GameObject player in policePlayers)
         {
             if (player == null)
                 policePlayers.Remove(player);
@@ -96,19 +99,28 @@ public class TeamManager : MonoBehaviour
             }
         }
 
-        if(playersReady.Count < 1)
+        if (playersReady.Count < 1)
         {
             gameStarted = false;
         }
     }
 
+    public void RoleButton(int roleNum)
+    {
+        role = roleNum;
+        pickedRole = true;
+    }
+
     void StartGame()
     {
         Debug.Log("Game started");
-        foreach(PlayerTeam player in playersReady)
+        foreach (PlayerTeam player in playersReady)
         {
-            int rand = Random.Range(0, 3);
-            switch (rand)
+            if (!pickedRole)
+            {
+                role = Random.Range(0, 3);
+            }
+            switch (role)
             {
                 case 0:
                     player.PickPolice();

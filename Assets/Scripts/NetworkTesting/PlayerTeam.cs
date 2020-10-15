@@ -63,7 +63,7 @@ public class PlayerTeam : NetworkBehaviour
     }*/
 
     [Command]
-    void SyncRoleWithServer(TeamManager.PlayerTeams role)
+    void CmdSyncRoleWithServer(TeamManager.PlayerTeams role)
     {
         if (role == TeamManager.PlayerTeams.police)
         {
@@ -86,12 +86,12 @@ public class PlayerTeam : NetworkBehaviour
             myCam.cullingMask = spyMask;
             MAURMustache.SetActive(true);
         }
-        SyncRoleWithClient(myTeam);
+        RpcSyncRoleWithClient(myTeam);
         manager.AddToList(this);
     }
 
     [ClientRpc]
-    void SyncRoleWithClient(TeamManager.PlayerTeams role)
+    void RpcSyncRoleWithClient(TeamManager.PlayerTeams role)
     {
         if (role == TeamManager.PlayerTeams.police)
         {
@@ -120,7 +120,7 @@ public class PlayerTeam : NetworkBehaviour
     {
         if (isLocalPlayer)
         {
-            SyncRoleWithServer(myTeam);
+            CmdSyncRoleWithServer(myTeam);
         }
     }
 
@@ -145,8 +145,8 @@ public class PlayerTeam : NetworkBehaviour
             mesh.mesh = manager.teamMeshes[0];
             if (isLocalPlayer)
             {
-                SyncRoleWithServer(myTeam);
-                SyncRoleWithClient(myTeam);
+                CmdSyncRoleWithServer(myTeam);
+                RpcSyncRoleWithClient(myTeam);
             }
             ui.MakeUI();
             myCam.cullingMask = normalMask;
@@ -162,8 +162,8 @@ public class PlayerTeam : NetworkBehaviour
             mesh.mesh = manager.teamMeshes[1];
             if (isLocalPlayer)
             {
-                SyncRoleWithServer(myTeam);
-                SyncRoleWithClient(myTeam);
+                CmdSyncRoleWithServer(myTeam);
+                RpcSyncRoleWithClient(myTeam);
             }
             ui.MakeUI();
             myCam.cullingMask = normalMask;
@@ -178,8 +178,8 @@ public class PlayerTeam : NetworkBehaviour
             mesh.mesh = manager.teamMeshes[1];
             if (isLocalPlayer)
             {
-                SyncRoleWithServer(myTeam);
-                SyncRoleWithClient(myTeam);
+                CmdSyncRoleWithServer(myTeam);
+                RpcSyncRoleWithClient(myTeam);
             }
             ui.MakeUI();
             MAURMustache.SetActive(true);
@@ -193,17 +193,17 @@ public class PlayerTeam : NetworkBehaviour
         {
             Debug.Log(gameObject.name + " is ready", gameObject);
             isReady = true;
-            ReadyUp(true);
+            CmdReadyUp(true);
         }
 
-        if (Input.GetKeyDown(KeyCode.Escape) && isLocalPlayer)
+        /*if (Input.GetKeyDown(KeyCode.Escape) && isLocalPlayer)
         {
             Application.Quit();
-        }
+        }*/
     }
 
     [Command]
-    void ReadyUp(bool b)
+    void CmdReadyUp(bool b)
     {
         isReady = b;
     }

@@ -34,8 +34,8 @@ public class PlayerMovement : NetworkBehaviour
             GetComponentInChildren<Canvas>().gameObject.SetActive(false);
         }
         controller = gameObject.GetComponent<CharacterController>();
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
+        //Cursor.visible = false;
+        //Cursor.lockState = CursorLockMode.Locked;
     }
 
     public override void OnStopClient()
