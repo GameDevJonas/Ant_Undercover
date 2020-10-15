@@ -116,9 +116,9 @@ MonoBehaviour:
   nameText: {fileID: 6331082399437259292}
   roleText: {fileID: 6331082400399679185}
   passports:
-  - {fileID: 2800000, guid: 7eb5d5d38853684418cf267d6695e0ac, type: 3}
-  - {fileID: 2800000, guid: 5a96cd394a37b78448a001f21855aa30, type: 3}
-  - {fileID: 2800000, guid: bd9c0d3c824cc14479b62f529066b729, type: 3}
+  - {fileID: 2800000, guid: 6d8fd264afdbd3f4daccbf667de933ea, type: 3}
+  - {fileID: 2800000, guid: 30f111aec0a7b0a4fa4da8cf26d89623, type: 3}
+  - {fileID: 2800000, guid: dbf37a474c8515443a7b00ee18086b16, type: 3}
   names:
   - Anthony
   - Maurius
@@ -557,7 +557,7 @@ PrefabInstance:
     - target: {fileID: 8022362926470122773, guid: 05625b4c06d1a5b4f809ef7336b5f465, type: 3}
       propertyPath: m_Texture
       value: 
-      objectReference: {fileID: 2800000, guid: 5a96cd394a37b78448a001f21855aa30, type: 3}
+      objectReference: {fileID: 2800000, guid: dbf37a474c8515443a7b00ee18086b16, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 05625b4c06d1a5b4f809ef7336b5f465, type: 3}
 --- !u!1 &6331082400438657910 stripped

@@ -14,7 +14,7 @@ public class MovementTest : MonoBehaviour
     public float xInput;
     public float yInput;
 
-    public GameObject model, lookAtObject;
+    public GameObject model;
 
     private void Start()
     {

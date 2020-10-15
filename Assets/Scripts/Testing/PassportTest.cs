@@ -34,6 +34,29 @@ public class PassportTest : MonoBehaviour
         }
     }
 
+    /*private void Update()
+    {
+        switch (playerParent.myTeam)
+        {
+            case TeamTesting.TestingTeams.police:
+                UpdatePassPort(0);
+                break;
+            case TeamTesting.TestingTeams.civillian:
+                UpdatePassPort(1);
+                break;
+            case TeamTesting.TestingTeams.spy:
+                UpdatePassPort(2);
+                break;
+        }
+    }*/
+
+    public void UpdatePassPort(int role)
+    {
+        passBack.texture = passports[role];
+        roleText.text = roleName[role];
+        roleText.color = roleColors[role];
+    }
+
     void MakePassPort(int role)
     {
         passBack.texture = passports[role];

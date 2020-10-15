@@ -195,6 +195,11 @@ public class PlayerTeam : NetworkBehaviour
             isReady = true;
             ReadyUp(true);
         }
+
+        if (Input.GetKeyDown(KeyCode.Escape) && isLocalPlayer)
+        {
+            Application.Quit();
+        }
     }
 
     [Command]
