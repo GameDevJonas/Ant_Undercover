@@ -31,13 +31,16 @@ public class TeamManager : MonoBehaviour
         switch (playerToAdd.myTeam)
         {
             case PlayerTeams.police:
-                policePlayers.Add(playerToAdd.gameObject);
+                if (!policePlayers.Contains(playerToAdd.gameObject))
+                    policePlayers.Add(playerToAdd.gameObject);
                 break;
             case PlayerTeams.civillian:
-                civillianPlayers.Add(playerToAdd.gameObject);
+                if (!civillianPlayers.Contains(playerToAdd.gameObject))
+                    civillianPlayers.Add(playerToAdd.gameObject);
                 break;
             case PlayerTeams.spy:
-                spyPlayers.Add(playerToAdd.gameObject);
+                if (!spyPlayers.Contains(playerToAdd.gameObject))
+                    spyPlayers.Add(playerToAdd.gameObject);
                 break;
         }
     }
@@ -52,10 +55,10 @@ public class TeamManager : MonoBehaviour
             StartGame();
         }
 
-        if (Input.GetKeyDown(KeyCode.K))
-        {
-            SyncAllClients();
-        }
+        //if (Input.GetKeyDown(KeyCode.K))
+        //{
+        //    SyncAllClients();
+        //}
     }
 
     public void CheckForNullRefs()
@@ -77,14 +80,14 @@ public class TeamManager : MonoBehaviour
         }
     }
 
-    void SyncAllClients()
-    {
-        Debug.Log("Synced all clients");
-        foreach (PlayerMovement player in playersConnected)
-        {
-            player.GetComponent<PlayerTeam>().SyncAll();
-        }
-    }
+    //void SyncAllClients()
+    //{
+    //    Debug.Log("Synced all clients");
+    //    foreach (PlayerMovement player in playersConnected)
+    //    {
+    //        player.GetComponent<PlayerTeam>().SyncAll();
+    //    }
+    //}
 
     void CheckForReadyPlayers()
     {

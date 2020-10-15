@@ -65,29 +65,29 @@ public class PlayerTeam : NetworkBehaviour
     [Command]
     void CmdSyncRoleWithServer(TeamManager.PlayerTeams role)
     {
-        if (role == TeamManager.PlayerTeams.police)
-        {
-            MAURMustache.SetActive(false);
-            myTeam = role;
-            mesh.mesh = manager.teamMeshes[0];
-            myCam.cullingMask = normalMask;
-        }
-        else if (role == TeamManager.PlayerTeams.civillian)
-        {
-            MAURMustache.SetActive(false);
-            myTeam = role;
-            mesh.mesh = manager.teamMeshes[1];
-            myCam.cullingMask = normalMask;
-        }
-        else
-        {
-            myTeam = role;
-            mesh.mesh = manager.teamMeshes[1];
-            myCam.cullingMask = spyMask;
-            MAURMustache.SetActive(true);
-        }
-        RpcSyncRoleWithClient(myTeam);
-        manager.AddToList(this);
+        //if (role == TeamManager.PlayerTeams.police)
+        //{
+        //    MAURMustache.SetActive(false);
+        //    myTeam = role;
+        //    mesh.mesh = manager.teamMeshes[0];
+        //    myCam.cullingMask = normalMask;
+        //}
+        //else if (role == TeamManager.PlayerTeams.civillian)
+        //{
+        //    MAURMustache.SetActive(false);
+        //    myTeam = role;
+        //    mesh.mesh = manager.teamMeshes[1];
+        //    myCam.cullingMask = normalMask;
+        //}
+        //else
+        //{
+        //    myTeam = role;
+        //    mesh.mesh = manager.teamMeshes[1];
+        //    myCam.cullingMask = spyMask;
+        //    MAURMustache.SetActive(true);
+        //}
+        RpcSyncRoleWithClient(role);
+        //manager.AddToList(this);
     }
 
     [ClientRpc]
@@ -114,15 +114,16 @@ public class PlayerTeam : NetworkBehaviour
             myCam.cullingMask = spyMask;
             MAURMustache.SetActive(true);
         }
+        manager.AddToList(this);
     }
 
-    public void SyncAll()
-    {
-        if (isLocalPlayer)
-        {
-            CmdSyncRoleWithServer(myTeam);
-        }
-    }
+    //public void SyncAll()
+    //{
+    //    if (isLocalPlayer)
+    //    {
+    //        CmdSyncRoleWithServer(myTeam);
+    //    }
+    //}
 
     public override void OnStopClient()
     {

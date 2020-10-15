@@ -32,6 +32,11 @@ public class PlayerPileTask : NetworkBehaviour
     {
         myRole = GetComponent<PlayerTeam>().myTeam.ToString();
 
+        if(myRole == "police")
+        {
+            return;
+        }
+
         PickUpRelease();
         PlaceObjectOnGoal();
         SabotageUpdate();
@@ -148,50 +153,45 @@ public class PlayerPileTask : NetworkBehaviour
         {
             if (holding == "Leaf")
             {
-                CmdPutOnGoal("Leaf", currentGoal.gameObject, myRole);
-                if (isServer)
-                    RpcPutOnGoal("Leaf", currentGoal.gameObject, myRole);
-                leafObj.SetActive(false);
+                CmdPutOnGoal("Leaf", myRole);
+                //if (isServer)
+                //RpcPutOnGoal("Leaf", currentGoal.gameObject, myRole);
+                //leafObj.SetActive(false);
             }
             else if (holding == "Stick")
             {
-                CmdPutOnGoal("Stick", currentGoal.gameObject, myRole);
-                if (isServer)
-                    RpcPutOnGoal("Stick", currentGoal.gameObject, myRole);
-                stickObj.SetActive(false);
+                CmdPutOnGoal("Stick", myRole);
+                //if (isServer)
+                //    //RpcPutOnGoal("Stick", currentGoal.gameObject, myRole);
+                //stickObj.SetActive(false);
             }
-            if (!isServer)
-            {
-                currentGoal.PlayerGiveItem(holding, myRole);
-            }
-            holding = null;
-            canDeliver = false;
-            holdingItem = false;
+            //if (!isServer)
+            //{
+                //currentGoal.PlayerGiveItem(holding, myRole);
+            //}
+            //holding = null;
+            //canDeliver = false;
+            //holdingItem = false;
         }
     }
 
     [Command]
-    public void CmdPutOnGoal(string item, GameObject goal, string role)
+    public void CmdPutOnGoal(string item, string role)
     {
-        //Debug.Log("Goal is " + goal.name, goal);
-        //if (!isServer)
-        //    RpcPutOnGoal(item, goal, role);
-        goal.GetComponent<PileGoal>().PlayerGiveItem(item, role);
-        if (item == "Leaf")
-        {
-            leafObj.SetActive(false);
-        }
-        else if (item == "Stick")
-        {
-            stickObj.SetActive(false);
-        }
-        RpcPutOnGoal(item, goal, role); //det er noe føkka her
+        //goal.GetComponent<PileGoal>().PlayerGiveItem(item, role);
+        //if (item == "Leaf")
+        //{
+        //    leafObj.SetActive(false);
+        //}
+        //else if (item == "Stick")
+        //{
+        //    stickObj.SetActive(false);
+        //}
+        RpcPutOnGoal(item, role);
     }
     [ClientRpc]
-    public void RpcPutOnGoal(string item, GameObject goal, string role)
+    public void RpcPutOnGoal(string item, string role)
     {
-        //if(!isServer)
-        goal.GetComponent<PileGoal>().PlayerGiveItem(item, role);
         if (item == "Leaf")
         {
             leafObj.SetActive(false);
@@ -200,54 +200,66 @@ public class PlayerPileTask : NetworkBehaviour
         {
             stickObj.SetActive(false);
         }
-        //CmdPutOnGoal(item, goal, role);
+        currentGoal.PlayerGiveItem(item, role);
+        holding = null;
+        canDeliver = false;
+        holdingItem = false;
+        currentGoal = null;
     }
 
     #region Pickup and release NOT ON GOAL
     void PickUpRelease()
     {
-        if (holdingItem && Input.GetKeyDown(KeyCode.E) && !canDeliver && isLocalPlayer)
+        if (Input.GetKeyDown(KeyCode.E) && isLocalPlayer)
         {
-            if (holding == "Leaf")
+            if (holdingItem)
             {
-                leafObj.SetActive(false);
-                CmdObjectsOnOff("Leaf", false);
-                if (isServer)
-                    RpcObjectsOnOff("Leaf", false);
-            }
-            else if (holding == "Stick")
-            {
-                stickObj.SetActive(false);
-                CmdObjectsOnOff("Stick", false);
-                if (isServer)
-                    RpcObjectsOnOff("Stick", false);
-            }
-            holding = null;
-            holdingItem = false;
-        }
-
-        if (!holdingItem && canPickUp)
-        {
-            if (Input.GetKeyDown(KeyCode.E) && currentPile.objectsReady > 0 && isLocalPlayer)
-            {
-                holding = currentPile.what;
-                if (holding == "Leaf")
+                if (!canDeliver)
                 {
-                    leafObj.SetActive(true);
-                    CmdObjectsOnOff("Leaf", true);
-                    if (isServer)
-                        RpcObjectsOnOff("Leaf", true);
+                    if (holding == "Leaf")
+                    {
+                        //leafObj.SetActive(false);
+                        CmdObjectsOnOff("Leaf", false);
+                        //if (isServer)
+                        //RpcObjectsOnOff("Leaf", false);
+                    }
+                    else if (holding == "Stick")
+                    {
+                        //stickObj.SetActive(false);
+                        CmdObjectsOnOff("Stick", false);
+                        //if (isServer)
+                        //RpcObjectsOnOff("Stick", false);
+                    }
+                    //holding = null;
+                    //holdingItem = false;
                 }
-                else if (holding == "Stick")
+            }
+            else if (!holdingItem)
+            {
+                if (canPickUp)
                 {
-                    stickObj.SetActive(true);
-                    CmdObjectsOnOff("Stick", true);
-                    if (isServer)
-                        RpcObjectsOnOff("Stick", true);
+                    if (currentPile.objectsReady > 0)
+                    {
+                        holding = currentPile.what;
+                        if (holding == "Leaf")
+                        {
+                            //leafObj.SetActive(true);
+                            CmdObjectsOnOff("Leaf", true);
+                            //if (isServer)
+                            //    RpcObjectsOnOff("Leaf", true);
+                        }
+                        else if (holding == "Stick")
+                        {
+                            //stickObj.SetActive(true);
+                            CmdObjectsOnOff("Stick", true);
+                            //if (isServer)
+                            //    RpcObjectsOnOff("Stick", true);
+                        }
+                        //currentPile.TakeObject();
+                        //holdingItem = true;
+                        //currentPile = null;
+                    }
                 }
-                currentPile.TakeObject();
-                currentPile = null;
-                holdingItem = true;
             }
         }
     }
@@ -255,22 +267,26 @@ public class PlayerPileTask : NetworkBehaviour
     [Command]
     public void CmdObjectsOnOff(string item, bool r)
     {
-        //if (!isServer)
-        //    RpcObjectsOnOff(item, r);
-        if (item == "Leaf")
-        {
-            leafObj.SetActive(r);
-        }
-        else if (item == "Stick")
-        {
-            stickObj.SetActive(r);
-        }
+        //holding = item;
+        //holdingItem = r;
         RpcObjectsOnOff(item, r);
+        //if (newItem == "Leaf")
+        //{
+        //    leafObj.SetActive(r);
+        //}
+        //else if (newItem == "Stick")
+        //{
+        //    stickObj.SetActive(r);
+        //}
+        //if(!isServer)
+        //currentPile.TakeObject();
+        //currentPile = null;
     }
 
     [ClientRpc]
     public void RpcObjectsOnOff(string item, bool r)
     {
+        holding = item;
         if (item == "Leaf")
         {
             leafObj.SetActive(r);
@@ -279,7 +295,21 @@ public class PlayerPileTask : NetworkBehaviour
         {
             stickObj.SetActive(r);
         }
-        CmdObjectsOnOff(item, r);
+        if (r == true)
+        {
+            currentPile.TakeObject();
+        }
+        //if(!isServer)
+        holdingItem = r;
+        currentPile = null;
+        //if (r == true)
+        //{
+        //    holdingItem = true;
+        //}
+        //else
+        //{
+        //    Invoke("PickUpTimer", .5f);
+        //}
     }
     #endregion
 

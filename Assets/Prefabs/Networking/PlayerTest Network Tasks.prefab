@@ -131,7 +131,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 6842581178013882445}
-  m_RootOrder: 3
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!20 &1165768501
 Camera:
@@ -444,11 +444,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   syncMode: 0
-  syncInterval: 0.1
+  syncInterval: 0
   clientAuthority: 1
-  localPositionSensitivity: 0.01
-  localRotationSensitivity: 0.01
-  localScaleSensitivity: 0.01
+  localPositionSensitivity: 0
+  localRotationSensitivity: 0
+  localScaleSensitivity: 0
 --- !u!114 &3277116409312433520
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -662,15 +662,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7384801842102696630, guid: 5da62aa777f88c244bdba67e0e11a7b2, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.767466
+      value: -0.956
       objectReference: {fileID: 0}
     - target: {fileID: 7384801842102696630, guid: 5da62aa777f88c244bdba67e0e11a7b2, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.95
+      value: -2.07
       objectReference: {fileID: 0}
     - target: {fileID: 7384801842102696630, guid: 5da62aa777f88c244bdba67e0e11a7b2, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -6.7263584
+      value: -1.273
       objectReference: {fileID: 0}
     - target: {fileID: 7384801842102696630, guid: 5da62aa777f88c244bdba67e0e11a7b2, type: 3}
       propertyPath: m_LocalRotation.x
