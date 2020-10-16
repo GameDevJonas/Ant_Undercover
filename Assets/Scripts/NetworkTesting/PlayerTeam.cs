@@ -4,6 +4,7 @@ using UnityEngine;
 using Mirror;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class PlayerTeam : NetworkBehaviour
 {
@@ -60,6 +61,14 @@ public class PlayerTeam : NetworkBehaviour
         {
             notLocalMarker.SetActive(true);
             localMarker.SetActive(false);
+        }
+    }
+
+    public void LoadMenu()
+    {
+        if (isServer)
+        {
+            FindObjectOfType<NetworkManager>().StopHost();
         }
     }
 

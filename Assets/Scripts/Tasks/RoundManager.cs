@@ -4,6 +4,7 @@ using UnityEngine;
 using TMPro;
 using System;
 using Mirror;
+using UnityEngine.SceneManagement;
 
 public class RoundManager : MonoBehaviour
 {
@@ -45,6 +46,15 @@ public class RoundManager : MonoBehaviour
         {
             spyWinObj.SetActive(spyWin);
             policeWinObj.SetActive(!spyWin);
+            Invoke("SendToMainMenu", 5f);
+        }
+    }
+
+    void SendToMainMenu()
+    {
+        foreach(GameObject player in GameObject.FindGameObjectsWithTag("Player"))
+        {
+            player.GetComponent<PlayerTeam>().LoadMenu();
         }
     }
 
