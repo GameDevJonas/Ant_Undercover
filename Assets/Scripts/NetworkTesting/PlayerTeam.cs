@@ -14,7 +14,7 @@ public class PlayerTeam : NetworkBehaviour
 
     public PlayerUI ui;
 
-    public GameObject MAURMustache;
+    public GameObject MAURMustache, localMarker, notLocalMarker;
 
     MeshFilter mesh;
 
@@ -48,6 +48,39 @@ public class PlayerTeam : NetworkBehaviour
         else
         {
             leaveButtonText.text = "Disconnect";
+        }
+
+        //CmdSetMarker(isLocalPlayer);
+        if (isLocalPlayer)
+        {
+            localMarker.SetActive(true);
+            notLocalMarker.SetActive(false);
+        }
+        else
+        {
+            notLocalMarker.SetActive(true);
+            localMarker.SetActive(false);
+        }
+    }
+
+    [Command]
+    public void CmdSetMarker(bool local)
+    {
+        RpcSetMarker(local);
+    }
+
+    [ClientRpc]
+    public void RpcSetMarker(bool local)
+    {
+        if (local)
+        {
+            localMarker.SetActive(true);
+            notLocalMarker.SetActive(false);
+        }
+        else
+        {
+            notLocalMarker.SetActive(true);
+            localMarker.SetActive(false);
         }
     }
 

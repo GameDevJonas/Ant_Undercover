@@ -14,4 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/NetworkingTasks.unity
     guid: 038c1a5c08e6c8a449c4ae8fc7eb5735
+  - enabled: 1
+    path: Assets/Scenes/DollyCam1.unity
+    guid: 2faab4021b0082f4fbf513f184cb34aa
   m_configObjects: {}
