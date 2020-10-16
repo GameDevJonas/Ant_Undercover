@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
+using UnityEngine.UI;
+using TMPro;
 
 public class PlayerTeam : NetworkBehaviour
 {
@@ -23,8 +25,11 @@ public class PlayerTeam : NetworkBehaviour
     [SyncVar]
     public bool isReady;
 
+    public TextMeshProUGUI leaveButtonText;
+
     private void Awake()
     {
+
         isReady = false;
         FindObjectOfType<TeamManager>().playersConnected.Add(GetComponentInParent<PlayerMovement>());
         MAURMustache.SetActive(false);
@@ -32,6 +37,18 @@ public class PlayerTeam : NetworkBehaviour
         mesh = GetComponentInChildren<MeshFilter>();
         manager = FindObjectOfType<TeamManager>();
         mesh.mesh = manager.teamMeshes[1];
+    }
+
+    private void Start()
+    {
+        if (isServer)
+        {
+            leaveButtonText.text = "Stop Host";
+        }
+        else
+        {
+            leaveButtonText.text = "Disconnect";
+        }
     }
 
     /*public void PickRole()
@@ -62,30 +79,42 @@ public class PlayerTeam : NetworkBehaviour
         ui.MakeUI();
     }*/
 
+    public void LeaveGame()
+    {
+        if (isServer)
+        {
+            FindObjectOfType<NetworkManager>().StopHost();
+        }
+        else
+        {
+            FindObjectOfType<NetworkManager>().StopClient();
+        }
+    }
+
     [Command]
     void CmdSyncRoleWithServer(TeamManager.PlayerTeams role)
     {
-        //if (role == TeamManager.PlayerTeams.police)
-        //{
-        //    MAURMustache.SetActive(false);
-        //    myTeam = role;
-        //    mesh.mesh = manager.teamMeshes[0];
-        //    myCam.cullingMask = normalMask;
-        //}
-        //else if (role == TeamManager.PlayerTeams.civillian)
-        //{
-        //    MAURMustache.SetActive(false);
-        //    myTeam = role;
-        //    mesh.mesh = manager.teamMeshes[1];
-        //    myCam.cullingMask = normalMask;
-        //}
-        //else
-        //{
-        //    myTeam = role;
-        //    mesh.mesh = manager.teamMeshes[1];
-        //    myCam.cullingMask = spyMask;
-        //    MAURMustache.SetActive(true);
-        //}
+        if (role == TeamManager.PlayerTeams.police)
+        {
+            MAURMustache.SetActive(false);
+            myTeam = role;
+            mesh.mesh = manager.teamMeshes[0];
+            myCam.cullingMask = normalMask;
+        }
+        else if (role == TeamManager.PlayerTeams.civillian)
+        {
+           MAURMustache.SetActive(false);
+            myTeam = role;
+            mesh.mesh = manager.teamMeshes[1];
+           myCam.cullingMask = normalMask;
+        }
+        else
+        {
+            myTeam = role;
+            mesh.mesh = manager.teamMeshes[1];
+            myCam.cullingMask = spyMask;
+            MAURMustache.SetActive(true);
+        }
         RpcSyncRoleWithClient(role);
         //manager.AddToList(this);
     }
@@ -117,13 +146,13 @@ public class PlayerTeam : NetworkBehaviour
         manager.AddToList(this);
     }
 
-    //public void SyncAll()
-    //{
-    //    if (isLocalPlayer)
-    //    {
-    //        CmdSyncRoleWithServer(myTeam);
-    //    }
-    //}
+    public void SyncAll()
+    {
+        if (isLocalPlayer)
+        {
+            CmdSyncRoleWithServer(myTeam);
+        }
+    }
 
     public override void OnStopClient()
     {

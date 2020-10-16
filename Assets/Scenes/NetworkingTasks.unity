@@ -38801,45 +38801,13 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2658963855455848147, guid: 3c2aeda7b21acd54d844df471d267f82, type: 3}
-      propertyPath: spawnPrefabs.Array.size
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2658963855455848147, guid: 3c2aeda7b21acd54d844df471d267f82, type: 3}
-      propertyPath: playerPrefab
-      value: 
-      objectReference: {fileID: 8383486503803045121, guid: 490d1cc28ebfbe24eadc01f46d522dd1, type: 3}
-    - target: {fileID: 2658963855455848147, guid: 3c2aeda7b21acd54d844df471d267f82, type: 3}
-      propertyPath: playerSpawnMethod
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2658963855455848147, guid: 3c2aeda7b21acd54d844df471d267f82, type: 3}
-      propertyPath: maxConnections
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 2658963855455848147, guid: 3c2aeda7b21acd54d844df471d267f82, type: 3}
-      propertyPath: spawnPrefabs.Array.data[0]
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 2658963855455848147, guid: 3c2aeda7b21acd54d844df471d267f82, type: 3}
-      propertyPath: spawnPrefabs.Array.data[1]
-      value: 
-      objectReference: {fileID: 5023817959791653409, guid: 9e92355245c0af94d95d2c1176f46892, type: 3}
-    - target: {fileID: 2658963855455848147, guid: 3c2aeda7b21acd54d844df471d267f82, type: 3}
-      propertyPath: spawnPrefabs.Array.data[2]
-      value: 
-      objectReference: {fileID: 5023817959791653409, guid: 9e92355245c0af94d95d2c1176f46892, type: 3}
-    - target: {fileID: 2658963855455848147, guid: 3c2aeda7b21acd54d844df471d267f82, type: 3}
-      propertyPath: serverTickRate
-      value: 30
-      objectReference: {fileID: 0}
-    - target: {fileID: 2658963855455848148, guid: 3c2aeda7b21acd54d844df471d267f82, type: 3}
-      propertyPath: port
-      value: 25564
-      objectReference: {fileID: 0}
     - target: {fileID: 2658963855455848150, guid: 3c2aeda7b21acd54d844df471d267f82, type: 3}
       propertyPath: m_Name
       value: NetworkManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 2658963855455848150, guid: 3c2aeda7b21acd54d844df471d267f82, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3c2aeda7b21acd54d844df471d267f82, type: 3}

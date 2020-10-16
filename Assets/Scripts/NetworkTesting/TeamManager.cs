@@ -55,10 +55,10 @@ public class TeamManager : MonoBehaviour
             StartGame();
         }
 
-        //if (Input.GetKeyDown(KeyCode.K))
-        //{
-        //    SyncAllClients();
-        //}
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            SyncAllClients();
+        }
     }
 
     public void CheckForNullRefs()
@@ -80,14 +80,14 @@ public class TeamManager : MonoBehaviour
         }
     }
 
-    //void SyncAllClients()
-    //{
-    //    Debug.Log("Synced all clients");
-    //    foreach (PlayerMovement player in playersConnected)
-    //    {
-    //        player.GetComponent<PlayerTeam>().SyncAll();
-    //    }
-    //}
+    void SyncAllClients()
+    {
+        Debug.Log("Synced all clients");
+        foreach (PlayerMovement player in playersConnected)
+        {
+           player.GetComponent<PlayerTeam>().SyncAll();
+        }
+    }
 
     void CheckForReadyPlayers()
     {
@@ -136,7 +136,7 @@ public class TeamManager : MonoBehaviour
                     break;
             }
         }
-        //Invoke("SyncAllClients", 3f);
+        Invoke("SyncAllClients", 3f);
         gameStarted = true;
     }
 }
