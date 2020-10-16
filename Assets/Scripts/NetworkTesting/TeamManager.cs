@@ -136,7 +136,7 @@ public class TeamManager : MonoBehaviour
                     break;
             }
         }
-        Invoke("SyncAllClients", 3f);
+        //Invoke("SyncAllClients", 3f);
         gameStarted = true;
     }
 }
