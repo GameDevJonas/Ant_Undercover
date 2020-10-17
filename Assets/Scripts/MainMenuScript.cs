@@ -13,15 +13,23 @@ public class MainMenuScript : MonoBehaviour
     public TMP_InputField input;
     public string ip;
 
-    public bool showControls;
+    public bool showControls, serverOnly;
 
     public GameObject mainMenu, controlsMenu;
 
     void Start()
     {
-        showControls = false;
         manager = FindObjectOfType<NetworkManager>();
-        SceneManager.LoadScene(2, LoadSceneMode.Additive);
+        if (serverOnly)
+        {
+            manager.StartServer();
+        }
+        else
+        {
+            showControls = false;
+            Screen.fullScreenMode = FullScreenMode.FullScreenWindow;
+            SceneManager.LoadScene(2, LoadSceneMode.Additive);
+        }
     }
 
     // Update is called once per frame
@@ -39,6 +47,11 @@ public class MainMenuScript : MonoBehaviour
     public void QuitGame()
     {
         Application.Quit();
+    }
+
+    public void ToggleFullscreen()
+    {
+        Screen.fullScreen = !Screen.fullScreen;
     }
 
     public void IpChanged()
