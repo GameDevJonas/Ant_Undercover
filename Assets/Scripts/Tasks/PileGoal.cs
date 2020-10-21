@@ -3,15 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(Task))]
 public class PileGoal : MonoBehaviour
 {
+    Task myTask;
+
     public string whatDoINeed;
 
     public int objectsPlaced, objectsNeeded;
 
     public float repairTimerMax, repairTimer, repairValue;
 
-    public bool playerInRange, spyInRange, sabotaged, done;
+    public bool playerInRange, spyInRange, sabotaged;
 
     public List<GameObject> objectsInPile = new List<GameObject>();
 
@@ -24,21 +27,59 @@ public class PileGoal : MonoBehaviour
 
     public GameObject normalObj, sabotagedObj;
 
+    public PlayerPileTask player;
+
     //public float testTimer, testTimerSet;
 
     void Start()
     {
+        myTask = GetComponent<Task>();
+        myTask.spyMinimapObj.SetActive(false);
+        myTask.myTaskType = Task.TaskType.pile;
         //testTimer = testTimerSet;
         repairTimer = 0;
         objectsPlaced = 0;
         myState = GoalState.inProgress;
-        done = false;
+        myTask.done = false;
+        myTask.percentage = 0;
+        myTask.sabotaged = sabotaged;
     }
 
     // Update is called once per frame
     void Update()
     {
         StateUpdate();
+        if (player.myRole == "spy")
+        {
+            if (myState == GoalState.inProgress && player.canSabotage)
+            {
+                myTask.taskUI.ShowUiObject(myTask.spyMinimapObj);
+            }
+            else 
+            {
+                myTask.taskUI.CloseUiObject(myTask.spyMinimapObj);
+            }
+            
+        }
+
+        if (player.myRole == "civillian")
+        {
+            if (player.holding == whatDoINeed)
+            {
+                myTask.showOnUi = true;
+            }
+            else
+            {
+                myTask.showOnUi = false;
+            }
+        }
+
+
+        //if (!player.canSabotage)
+        //{
+        //    myTask.spyMinimapObj.SetActive(false);
+        //}
+
         /*if (FindObjectOfType<TeamManager>().gameStarted)
         {
             if (testTimer <= 0 && objectsPlaced < objectsNeeded)
@@ -58,6 +99,7 @@ public class PileGoal : MonoBehaviour
         switch (myState)
         {
             case GoalState.inProgress:
+                myTask.sabotaged = sabotaged;
                 normalObj.SetActive(true);
                 sabotagedObj.SetActive(false);
                 normalCanvas.gameObject.SetActive(playerInRange);
@@ -65,6 +107,7 @@ public class PileGoal : MonoBehaviour
                 InProgressState();
                 break;
             case GoalState.done:
+                myTask.percentage = 100;
                 normalObj.SetActive(true);
                 sabotagedObj.SetActive(false);
                 normalCanvas.gameObject.SetActive(false);
@@ -73,6 +116,7 @@ public class PileGoal : MonoBehaviour
                 DoneState();
                 break;
             case GoalState.sabotaged:
+                myTask.sabotaged = sabotaged;
                 normalObj.SetActive(false);
                 sabotagedObj.SetActive(true);
                 sabotagedCanvas.gameObject.SetActive(true);
@@ -109,12 +153,22 @@ public class PileGoal : MonoBehaviour
     #region In Progress State Functions
     void InProgressState()
     {
+        float placed = objectsPlaced;
+        float needed = objectsNeeded;
+        float percentage = (placed / needed) * 100;
+        myTask.percentage = percentage;
         whatDoINeed = "Leaf";
+
         UpdatePile();
         if (objectsPlaced >= objectsNeeded)
         {
             myState = GoalState.done;
         }
+
+        //if (player.myRole == "spy" && player.canSabotage)
+        //{
+        //    myTask.spyMinimapObj.SetActive(true);
+        //}
     }
 
     void UpdatePile()
@@ -194,6 +248,7 @@ public class PileGoal : MonoBehaviour
             if (i / 5 >= 1)
             {
                 sabotaged = true;
+                //player.canSabotage = false;
                 spyCanvas.GetComponentInChildren<Image>().fillAmount = 0;
                 myState = GoalState.sabotaged;
             }
@@ -204,7 +259,7 @@ public class PileGoal : MonoBehaviour
     #region Done State Functions
     void DoneState()
     {
-        done = true;
+        myTask.done = true;
     }
     #endregion
 
@@ -213,6 +268,7 @@ public class PileGoal : MonoBehaviour
     {
         whatDoINeed = "Stick";
         sabotagedCanvas.GetComponentInChildren<Image>().fillAmount = repairTimer / repairTimerMax;
+        myTask.repairPercentage = (repairTimer / repairTimerMax) * 100;
         RepairMe();
     }
 
@@ -221,6 +277,7 @@ public class PileGoal : MonoBehaviour
         if (repairTimer >= repairTimerMax)
         {
             sabotaged = false;
+            //player.canSabotage = true;
             myState = GoalState.inProgress;
             repairTimer = 0;
         }
@@ -254,12 +311,12 @@ public class PileGoal : MonoBehaviour
             if (player.GetComponent<PlayerTeam>().myTeam == TeamManager.PlayerTeams.spy /* && !sabotaged*/)
             {
                 spyInRange = true;
-                player.canSabotage = true;
+                //player.canSabotage = true;
             }
             else
             {
                 spyInRange = false;
-                player.canSabotage = false;
+                //player.canSabotage = false;
             }
         }
     }
@@ -269,7 +326,7 @@ public class PileGoal : MonoBehaviour
         {
             playerInRange = false;
             spyInRange = false;
-            other.GetComponent<PlayerPileTask>().canSabotage = false;
+            //other.GetComponent<PlayerPileTask>().canSabotage = false;
         }
     }
 }

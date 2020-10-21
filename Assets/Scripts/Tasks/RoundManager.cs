@@ -10,8 +10,8 @@ public class RoundManager : MonoBehaviour
 {
     public float gameTimer, gameTimerSet;
 
-    public List<PileGoal> goals = new List<PileGoal>();
-    public List<PileGoal> doneGoals = new List<PileGoal>();
+    public List<Task> tasks = new List<Task>();
+    public List<Task> doneTasks = new List<Task>();
 
     public bool gameDone, spyWin;
 
@@ -24,9 +24,9 @@ public class RoundManager : MonoBehaviour
         spyWinObj.SetActive(false);
         policeWinObj.SetActive(false);
         gameDone = false;
-        foreach (PileGoal g in FindObjectsOfType<PileGoal>())
+        foreach (Task g in FindObjectsOfType<Task>())
         {
-            goals.Add(g);
+            tasks.Add(g);
         }
         gameTimer = gameTimerSet * 60;
     }
@@ -34,9 +34,9 @@ public class RoundManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        GoalChecker();
         if (!gameDone)
         {
-            GoalChecker();
             if (FindObjectOfType<TeamManager>().gameStarted)
             {
                 GameTimer();
@@ -52,7 +52,7 @@ public class RoundManager : MonoBehaviour
 
     void SendToMainMenu()
     {
-        foreach(GameObject player in GameObject.FindGameObjectsWithTag("Player"))
+        foreach (GameObject player in GameObject.FindGameObjectsWithTag("Player"))
         {
             player.GetComponent<PlayerTeam>().LoadMenu();
         }
@@ -60,18 +60,19 @@ public class RoundManager : MonoBehaviour
 
     void GoalChecker()
     {
-        foreach (PileGoal goal in goals)
+        foreach (Task goal in tasks)
         {
-            if (!doneGoals.Contains(goal))
+            if (!doneTasks.Contains(goal))
             {
                 if (goal.done)
                 {
-                    doneGoals.Add(goal);
+                    doneTasks.Add(goal);
+                    tasks.Remove(goal);
                 }
             }
         }
 
-        if (doneGoals.Count == goals.Count)
+        if (tasks.Count == 0)
         {
             Debug.Log("GAME IS DONE");
             spyWin = false;

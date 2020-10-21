@@ -5,9 +5,9 @@ using Mirror;
 
 public class PlayerPileTask : NetworkBehaviour
 {
-    public bool holdingItem, canPickUp, canDeliver, arrowOn, canSabotage;
+    public bool holdingItem, canPickUp, canDeliver, arrowOn, canSabotage, sabotageReload;
 
-    public float holdingSpeed, normalSpeed, sabotageValue;
+    public float holdingSpeed, normalSpeed, sabotageValue, reloadTimer;
 
     public Transform holdPoint;
 
@@ -21,10 +21,19 @@ public class PlayerPileTask : NetworkBehaviour
 
     void Start()
     {
+        reloadTimer = 60;
         holdingItem = false;
         arrowOn = false;
         leafObj.SetActive(false);
         stickObj.SetActive(false);
+        if (isLocalPlayer)
+        {
+            foreach (PileGoal task in FindObjectsOfType<PileGoal>())
+            {
+                task.player = this;
+            }
+        }
+        canSabotage = true;
     }
 
     // Update is called once per frame
@@ -32,7 +41,7 @@ public class PlayerPileTask : NetworkBehaviour
     {
         myRole = GetComponent<PlayerTeam>().myTeam.ToString();
 
-        if(myRole == "police")
+        if (myRole == "police")
         {
             GetComponent<PlayerMovement>().playerSpeed = holdingSpeed;
             return;
@@ -41,6 +50,11 @@ public class PlayerPileTask : NetworkBehaviour
         PickUpRelease();
         PlaceObjectOnGoal();
         SabotageUpdate();
+
+        if (sabotageReload)
+        {
+            ReloadSabotage();
+        }
 
         if (holdingItem)
         {
@@ -53,6 +67,20 @@ public class PlayerPileTask : NetworkBehaviour
     }
 
     #region Sabotage funcs
+   void ReloadSabotage()
+    {
+        if(reloadTimer <= 0)
+        {
+            canSabotage = true;
+            reloadTimer = 60;
+            sabotageReload = false;
+        }
+        else
+        {
+            reloadTimer -= Time.deltaTime;
+        }
+    }
+    
     void SabotageUpdate()
     {
         if (canSabotage && isLocalPlayer)
@@ -74,8 +102,11 @@ public class PlayerPileTask : NetworkBehaviour
             {
                 sabotageValue = 0;
                 currentGoal.Sabotager(sabotageValue);
-                //if (isLocalPlayer)
                 CmdResetSabotage();
+                //if (currentGoal.myState != PileGoal.GoalState.sabotaged)
+                //{
+                //    canSabotage = true;
+                //}
             }
         }
     }
@@ -99,8 +130,12 @@ public class PlayerPileTask : NetworkBehaviour
     {
         sabotageValue = 0;
         currentGoal.Sabotager(0);
-        //if (isLocalPlayer)
         RpcResetSabotage();
+        //if (currentGoal.myState != PileGoal.GoalState.sabotaged)
+        //{
+        //    canSabotage = true;
+        //}
+        //if (isLocalPlayer)
     }
     [ClientRpc]
     public void RpcSabotageZero()
@@ -111,13 +146,24 @@ public class PlayerPileTask : NetworkBehaviour
     public void RpcAddSabotage(float v)
     {
         currentGoal.Sabotager(v);
+        if(v / 5 >= 1)
+        {
+            canSabotage = false;
+            sabotageReload = true;
+        }
     }
     [ClientRpc]
     public void RpcResetSabotage()
     {
         sabotageValue = 0;
         currentGoal.Sabotager(0);
+        //if(currentGoal.myState != PileGoal.GoalState.sabotaged)
+        //{
+        //    canSabotage = true;
+        //}
     }
+
+
     #endregion
 
     void PlaceObjectOnGoal()
@@ -168,7 +214,7 @@ public class PlayerPileTask : NetworkBehaviour
             }
             //if (!isServer)
             //{
-                //currentGoal.PlayerGiveItem(holding, myRole);
+            //currentGoal.PlayerGiveItem(holding, myRole);
             //}
             //holding = null;
             //canDeliver = false;
@@ -303,6 +349,10 @@ public class PlayerPileTask : NetworkBehaviour
         //if(!isServer)
         holdingItem = r;
         currentPile = null;
+        //if (!r)
+        //{
+        //    holding = null;
+        //}
         //if (r == true)
         //{
         //    holdingItem = true;

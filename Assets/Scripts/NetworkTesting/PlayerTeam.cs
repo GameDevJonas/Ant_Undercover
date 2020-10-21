@@ -30,7 +30,6 @@ public class PlayerTeam : NetworkBehaviour
 
     private void Awake()
     {
-
         isReady = false;
         FindObjectOfType<TeamManager>().playersConnected.Add(GetComponentInParent<PlayerMovement>());
         MAURMustache.SetActive(false);
@@ -62,6 +61,7 @@ public class PlayerTeam : NetworkBehaviour
             notLocalMarker.SetActive(true);
             localMarker.SetActive(false);
         }
+
     }
 
     public void LoadMenu()
@@ -145,10 +145,10 @@ public class PlayerTeam : NetworkBehaviour
         }
         else if (role == TeamManager.PlayerTeams.civillian)
         {
-           MAURMustache.SetActive(false);
+            MAURMustache.SetActive(false);
             myTeam = role;
             mesh.mesh = manager.teamMeshes[1];
-           myCam.cullingMask = normalMask;
+            myCam.cullingMask = normalMask;
         }
         else
         {
@@ -188,11 +188,17 @@ public class PlayerTeam : NetworkBehaviour
         manager.AddToList(this);
     }
 
+    void GetStarterTasks()
+    {
+        FindObjectOfType<TaskUI>().GetStarterTasks(myTeam.ToString());
+    }
+
     public void SyncAll()
     {
         if (isLocalPlayer)
         {
             CmdSyncRoleWithServer(myTeam);
+            Invoke("GetStarterTasks", .5f);
         }
     }
 
@@ -222,6 +228,7 @@ public class PlayerTeam : NetworkBehaviour
             }
             ui.MakeUI();
             myCam.cullingMask = normalMask;
+            
         }
     }
 
@@ -239,6 +246,7 @@ public class PlayerTeam : NetworkBehaviour
             }
             ui.MakeUI();
             myCam.cullingMask = normalMask;
+            
         }
     }
 
@@ -256,6 +264,8 @@ public class PlayerTeam : NetworkBehaviour
             ui.MakeUI();
             MAURMustache.SetActive(true);
             myCam.cullingMask = spyMask;
+            GetComponent<PlayerPileTask>().canSabotage = true;
+            //Invoke("GetStarterTasks", .5f);
         }
     }
 
