@@ -127,7 +127,7 @@ public class TaskUI : MonoBehaviour
     public void GetStarterTasks(string role)
     {
         localPlayerRole = role;
-        if (localPlayerRole == "civillian")
+        if (localPlayerRole != "spy")
         {
             int o = Random.Range(0, manager.tasks.Count);
             //Debug.Log(o);
