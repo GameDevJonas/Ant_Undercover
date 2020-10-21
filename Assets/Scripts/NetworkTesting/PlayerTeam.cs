@@ -5,6 +5,7 @@ using Mirror;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
+using UnityEngine.Timeline;
 
 public class PlayerTeam : NetworkBehaviour
 {
@@ -15,7 +16,7 @@ public class PlayerTeam : NetworkBehaviour
 
     public PlayerUI ui;
 
-    public GameObject MAURMustache, localMarker, notLocalMarker;
+    public GameObject MAURMustache;
 
     MeshFilter mesh;
 
@@ -28,8 +29,13 @@ public class PlayerTeam : NetworkBehaviour
 
     public TextMeshProUGUI leaveButtonText;
 
+    public GameObject policeSprite, civillianSprite, spySprite;
+
     private void Awake()
     {
+        civillianSprite.SetActive(false);
+        policeSprite.SetActive(false);
+        spySprite.SetActive(false);
         isReady = false;
         FindObjectOfType<TeamManager>().playersConnected.Add(GetComponentInParent<PlayerMovement>());
         MAURMustache.SetActive(false);
@@ -51,16 +57,7 @@ public class PlayerTeam : NetworkBehaviour
         }
 
         //CmdSetMarker(isLocalPlayer);
-        if (isLocalPlayer)
-        {
-            localMarker.SetActive(true);
-            notLocalMarker.SetActive(false);
-        }
-        else
-        {
-            notLocalMarker.SetActive(true);
-            localMarker.SetActive(false);
-        }
+
 
     }
 
@@ -83,13 +80,13 @@ public class PlayerTeam : NetworkBehaviour
     {
         if (local)
         {
-            localMarker.SetActive(true);
-            notLocalMarker.SetActive(false);
+            //localMarker.SetActive(true);
+            //notLocalMarker.SetActive(false);
         }
         else
         {
-            notLocalMarker.SetActive(true);
-            localMarker.SetActive(false);
+            //notLocalMarker.SetActive(true);
+            //localMarker.SetActive(false);
         }
     }
 
@@ -186,6 +183,56 @@ public class PlayerTeam : NetworkBehaviour
             MAURMustache.SetActive(true);
         }
         manager.AddToList(this);
+
+        if (isLocalPlayer)
+        {
+            if (myTeam == TeamManager.PlayerTeams.civillian)
+            {
+                civillianSprite.SetActive(true);
+            }
+            else if (myTeam == TeamManager.PlayerTeams.spy)
+            {
+                civillianSprite.SetActive(true);
+            }
+            else if (myTeam == TeamManager.PlayerTeams.police)
+            {
+                civillianSprite.SetActive(true);
+            }
+        }
+        else
+        {
+            if (myTeam == TeamManager.PlayerTeams.civillian)
+            {
+                foreach (PlayerTeam player in FindObjectsOfType<PlayerTeam>())
+                {
+                    if (player.myTeam == TeamManager.PlayerTeams.police)
+                    {
+                        player.policeSprite.SetActive(true);
+                    }
+                }
+            }
+            else if (myTeam == TeamManager.PlayerTeams.spy)
+            {
+                foreach (PlayerTeam player in FindObjectsOfType<PlayerTeam>())
+                {
+                    if(player.myTeam == TeamManager.PlayerTeams.spy)
+                    {
+                        player.spySprite.SetActive(true);
+                        player.policeSprite.SetActive(true);
+                    }
+                }
+            }
+            else if (myTeam == TeamManager.PlayerTeams.police)
+            {
+                foreach (PlayerTeam player in FindObjectsOfType<PlayerTeam>())
+                {
+                    if (player.myTeam == TeamManager.PlayerTeams.police)
+                    {
+                        player.policeSprite.SetActive(true);
+                    }
+                }
+            }
+        }
     }
 
     void GetStarterTasks()
@@ -228,7 +275,7 @@ public class PlayerTeam : NetworkBehaviour
             }
             ui.MakeUI();
             myCam.cullingMask = normalMask;
-            
+
         }
     }
 
@@ -246,7 +293,7 @@ public class PlayerTeam : NetworkBehaviour
             }
             ui.MakeUI();
             myCam.cullingMask = normalMask;
-            
+
         }
     }
 

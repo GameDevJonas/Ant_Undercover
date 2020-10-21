@@ -61,9 +61,13 @@ public class PileGoal : MonoBehaviour
             }
             
         }
-
-        if (player.myRole == "civillian")
+        else if(player.myRole == "police")
         {
+            myTask.showOnUi = true;
+        }
+        else
+        {
+            myTask.taskUI.CloseUiObject(myTask.spyMinimapObj);
             if (player.holding == whatDoINeed)
             {
                 myTask.showOnUi = true;

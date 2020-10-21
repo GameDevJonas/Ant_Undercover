@@ -48,6 +48,7 @@ public class TaskUI : MonoBehaviour
             if (!task.sabotaged)
             {
                 workerUis[task.uiOrder].percentage.text = (Mathf.RoundToInt(task.percentage)) + " %";
+                task.myMinimapObj.GetComponent<Image>().sprite = workerTargetSprites[task.targetSprite];
                 WorkerTaskGetInfo(task.uiOrder, task.name, task.objSprite, task.targetSprite);
             }
             else if (task.sabotaged)
@@ -64,6 +65,7 @@ public class TaskUI : MonoBehaviour
         workerUis[task.uiOrder].targetImage.sprite = workerTargetSprites[1];
         workerUis[task.uiOrder].objective.sprite = workerObjSprites[3];
         workerUis[task.uiOrder].percentage.text = (Mathf.RoundToInt(task.repairPercentage)) + " %";
+        task.myMinimapObj.GetComponent<Image>().sprite = workerTargetSprites[1];
         if (!task.sabotaged)
         {
             WorkerTaskGetInfo(task.uiOrder, task.name, task.objSprite, task.targetSprite);
