@@ -184,7 +184,92 @@ public class PlayerTeam : NetworkBehaviour
         }
         manager.AddToList(this);
 
+
+
+    }
+
+    void GetStarterTasks()
+    {
+        FindObjectOfType<TaskUI>().GetStarterTasks(myTeam.ToString());
+    }
+
+    public void SyncAll()
+    {
         if (isLocalPlayer)
+        {
+            CmdSyncRoleWithServer(myTeam);
+            Invoke("GetStarterTasks", .5f);
+
+        }
+
+        if (isLocalPlayer)
+        {
+            if (myTeam == TeamManager.PlayerTeams.civillian)
+            {
+                foreach (GameObject player in manager.civillianPlayers)
+                {
+                    if (player != this)
+                    {
+                        player.GetComponent<PlayerTeam>().civillianSprite.SetActive(false);
+                    }
+                }
+                foreach (GameObject player in manager.policePlayers)
+                {
+                    player.GetComponent<PlayerTeam>().policeSprite.SetActive(true);
+                }
+                foreach (GameObject player in manager.spyPlayers)
+                {
+                    player.GetComponent<PlayerTeam>().spySprite.SetActive(false);
+                }
+                civillianSprite.SetActive(true);
+                policeSprite.SetActive(false);
+                spySprite.SetActive(false);
+            }
+            else if (myTeam == TeamManager.PlayerTeams.spy)
+            {
+                foreach (GameObject player in manager.civillianPlayers)
+                {
+                    player.GetComponent<PlayerTeam>().civillianSprite.SetActive(false);
+                }
+                foreach (GameObject player in manager.policePlayers)
+                {
+                    player.GetComponent<PlayerTeam>().policeSprite.SetActive(true);
+                }
+                foreach (GameObject player in manager.spyPlayers)
+                {
+                    if (player != this)
+                    {
+                        player.GetComponent<PlayerTeam>().spySprite.SetActive(true);
+                    }
+                }
+                civillianSprite.SetActive(true);
+                policeSprite.SetActive(false);
+                spySprite.SetActive(false);
+            }
+            else if (myTeam == TeamManager.PlayerTeams.police)
+            {
+                foreach (GameObject player in manager.civillianPlayers)
+                {
+                    player.GetComponent<PlayerTeam>().civillianSprite.SetActive(false);
+                }
+                foreach (GameObject player in manager.policePlayers)
+                {
+                    if (player != this)
+                    {
+                        player.GetComponent<PlayerTeam>().policeSprite.SetActive(true);
+                    }
+                }
+                foreach (GameObject player in manager.spyPlayers)
+                {
+                    player.GetComponent<PlayerTeam>().spySprite.SetActive(false);
+                }
+                civillianSprite.SetActive(true);
+                policeSprite.SetActive(false);
+                spySprite.SetActive(false);
+            }
+        }
+
+        /*if (isLocalPlayer)
         {
             if (myTeam == TeamManager.PlayerTeams.civillian)
             {
@@ -215,7 +300,7 @@ public class PlayerTeam : NetworkBehaviour
             {
                 foreach (PlayerTeam player in FindObjectsOfType<PlayerTeam>())
                 {
-                    if(player.myTeam == TeamManager.PlayerTeams.spy)
+                    if (player.myTeam == TeamManager.PlayerTeams.spy)
                     {
                         player.spySprite.SetActive(true);
                         player.policeSprite.SetActive(true);
@@ -232,21 +317,112 @@ public class PlayerTeam : NetworkBehaviour
                     }
                 }
             }
-        }
+        }*/
+        //CmdMarkerSync();
     }
 
-    void GetStarterTasks()
+    [Command]
+    void CmdMarkerSync()
     {
-        FindObjectOfType<TaskUI>().GetStarterTasks(myTeam.ToString());
+        RpcMarkerSync();
     }
-
-    public void SyncAll()
+    [ClientRpc]
+    void RpcMarkerSync()
     {
         if (isLocalPlayer)
         {
-            CmdSyncRoleWithServer(myTeam);
-            Invoke("GetStarterTasks", .5f);
+            if (myTeam == TeamManager.PlayerTeams.civillian)
+            {
+                civillianSprite.SetActive(true);
+                foreach (GameObject player in manager.civillianPlayers)
+                {
+                    if (player != this)
+                    {
+                        player.GetComponent<PlayerTeam>().civillianSprite.SetActive(false);
+                    }
+                }
+                foreach (GameObject player in manager.policePlayers)
+                {
+                    player.GetComponent<PlayerTeam>().policeSprite.SetActive(true);
+                }
+                foreach (GameObject player in manager.spyPlayers)
+                {
+                    player.GetComponent<PlayerTeam>().spySprite.SetActive(false);
+                }
+            }
+            else if (myTeam == TeamManager.PlayerTeams.spy)
+            {
+                civillianSprite.SetActive(true);
+                foreach (GameObject player in manager.civillianPlayers)
+                {
+                    player.GetComponent<PlayerTeam>().civillianSprite.SetActive(false);
+                }
+                foreach (GameObject player in manager.policePlayers)
+                {
+                    player.GetComponent<PlayerTeam>().policeSprite.SetActive(true);
+                }
+                foreach (GameObject player in manager.spyPlayers)
+                {
+                    if (player != this)
+                    {
+                        player.GetComponent<PlayerTeam>().spySprite.SetActive(true);
+                    }
+                }
+            }
+            else if (myTeam == TeamManager.PlayerTeams.police)
+            {
+                civillianSprite.SetActive(true);
+                foreach (GameObject player in manager.civillianPlayers)
+                {
+                    player.GetComponent<PlayerTeam>().civillianSprite.SetActive(false);
+                }
+                foreach (GameObject player in manager.policePlayers)
+                {
+                    if (player != this)
+                    {
+                        player.GetComponent<PlayerTeam>().policeSprite.SetActive(true);
+                    }
+                }
+                foreach (GameObject player in manager.spyPlayers)
+                {
+                    player.GetComponent<PlayerTeam>().spySprite.SetActive(false);
+                }
+            }
         }
+        //else
+        //{
+            /*if (myTeam == TeamManager.PlayerTeams.civillian)
+            {
+            }
+                foreach (PlayerTeam player in FindObjectsOfType<PlayerTeam>())
+                {
+                        if (player.myTeam == TeamManager.PlayerTeams.police && player != this)
+                        {
+                            player.policeSprite.SetActive(true);
+                        }
+                }
+            else if (myTeam == TeamManager.PlayerTeams.spy)
+            {
+                foreach (PlayerTeam player in FindObjectsOfType<PlayerTeam>())
+                {
+                    if (player.myTeam == TeamManager.PlayerTeams.spy && player != this)
+                    {
+                        player.spySprite.SetActive(true);
+                        player.policeSprite.SetActive(true);
+                    }
+                }
+            }
+            else if (myTeam == TeamManager.PlayerTeams.police)
+            {
+                foreach (PlayerTeam player in FindObjectsOfType<PlayerTeam>())
+                {
+                    if (player.myTeam == TeamManager.PlayerTeams.police && player != this)
+                    {
+                        player.policeSprite.SetActive(true);
+                    }
+                }
+            }*/
+        //}
     }
 
     public override void OnStopClient()
@@ -324,6 +500,7 @@ public class PlayerTeam : NetworkBehaviour
             isReady = true;
             CmdReadyUp(true);
         }
+
 
         /*if (Input.GetKeyDown(KeyCode.Escape) && isLocalPlayer)
         {
