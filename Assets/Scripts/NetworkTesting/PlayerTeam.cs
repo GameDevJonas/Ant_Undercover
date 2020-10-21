@@ -9,6 +9,8 @@ using UnityEngine.Timeline;
 
 public class PlayerTeam : NetworkBehaviour
 {
+    public bool isTestPlayer;
+
     TeamManager manager;
 
     [SyncVar]
@@ -31,12 +33,16 @@ public class PlayerTeam : NetworkBehaviour
 
     public GameObject policeSprite, civillianSprite, spySprite;
 
+
     private void Awake()
     {
         civillianSprite.SetActive(false);
         policeSprite.SetActive(false);
         spySprite.SetActive(false);
-        isReady = false;
+        if (!isTestPlayer)
+        {
+            isReady = false;
+        }
         FindObjectOfType<TeamManager>().playersConnected.Add(GetComponentInParent<PlayerMovement>());
         MAURMustache.SetActive(false);
         //myCam = Camera.main;
@@ -201,7 +207,7 @@ public class PlayerTeam : NetworkBehaviour
             Invoke("GetStarterTasks", .5f);
 
         }
-
+        GetComponent<PlayerAnterrogationBehaviour>().player = this;
         if (isLocalPlayer)
         {
             if (myTeam == TeamManager.PlayerTeams.civillian)
@@ -391,37 +397,37 @@ public class PlayerTeam : NetworkBehaviour
         }
         //else
         //{
-            /*if (myTeam == TeamManager.PlayerTeams.civillian)
+        /*if (myTeam == TeamManager.PlayerTeams.civillian)
+        {
+        }
+            foreach (PlayerTeam player in FindObjectsOfType<PlayerTeam>())
             {
-            }
-                foreach (PlayerTeam player in FindObjectsOfType<PlayerTeam>())
-                {
-                        if (player.myTeam == TeamManager.PlayerTeams.police && player != this)
-                        {
-                            player.policeSprite.SetActive(true);
-                        }
-                }
-            else if (myTeam == TeamManager.PlayerTeams.spy)
-            {
-                foreach (PlayerTeam player in FindObjectsOfType<PlayerTeam>())
-                {
-                    if (player.myTeam == TeamManager.PlayerTeams.spy && player != this)
-                    {
-                        player.spySprite.SetActive(true);
-                        player.policeSprite.SetActive(true);
-                    }
-                }
-            }
-            else if (myTeam == TeamManager.PlayerTeams.police)
-            {
-                foreach (PlayerTeam player in FindObjectsOfType<PlayerTeam>())
-                {
                     if (player.myTeam == TeamManager.PlayerTeams.police && player != this)
                     {
                         player.policeSprite.SetActive(true);
                     }
+            }
+        else if (myTeam == TeamManager.PlayerTeams.spy)
+        {
+            foreach (PlayerTeam player in FindObjectsOfType<PlayerTeam>())
+            {
+                if (player.myTeam == TeamManager.PlayerTeams.spy && player != this)
+                {
+                    player.spySprite.SetActive(true);
+                    player.policeSprite.SetActive(true);
                 }
-            }*/
+            }
+        }
+        else if (myTeam == TeamManager.PlayerTeams.police)
+        {
+            foreach (PlayerTeam player in FindObjectsOfType<PlayerTeam>())
+            {
+                if (player.myTeam == TeamManager.PlayerTeams.police && player != this)
+                {
+                    player.policeSprite.SetActive(true);
+                }
+            }
+        }*/
         //}
     }
 
