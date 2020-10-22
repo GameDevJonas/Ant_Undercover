@@ -9,6 +9,7 @@ public class TaskUI : MonoBehaviour
     RoundManager manager;
 
     public List<WorkerUI> workerUis = new List<WorkerUI>();
+    public List<WorkerUI> policeUis = new List<WorkerUI>();
     public List<Sprite> workerObjSprites = new List<Sprite>();
     public List<Sprite> workerTargetSprites = new List<Sprite>();
 
@@ -17,11 +18,12 @@ public class TaskUI : MonoBehaviour
 
     public string localPlayerRole;
 
-    public GameObject myGameObject;
+    public GameObject myGameObject, workerUI, policeUI;
 
     void Start()
     {
         activeTasks.Capacity = 3;
+        Debug.Log(activeTasks.Count);
         manager = GetComponent<RoundManager>();
         myGameObject.SetActive(false);
     }
@@ -29,7 +31,19 @@ public class TaskUI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        LoadTaskProgress();
+        if (localPlayerRole == "civillian" && myGameObject.activeSelf)
+        {
+            LoadTaskProgress();
+            policeUI.SetActive(false);
+            workerUI.SetActive(true);
+        }
+        else if (localPlayerRole == "police" && myGameObject.activeSelf)
+        {
+            //Debug.Log("player is police");
+            LoadPoliceProgress();
+            workerUI.SetActive(false);
+            policeUI.SetActive(true);
+        }
     }
 
     public void ShowUiObject(GameObject obj)
@@ -58,6 +72,37 @@ public class TaskUI : MonoBehaviour
         }
     }
 
+    public void LoadPoliceProgress()
+    {
+        foreach (Task task in manager.tasks)
+        {
+            if (!task.sabotaged)
+            {
+                policeUis[task.uiOrder].percentage.text = (Mathf.RoundToInt(task.percentage)) + " %";
+                task.myMinimapObj.GetComponent<Image>().sprite = workerTargetSprites[task.targetSprite];
+                PoliceTaskGetInfo(task.uiOrder, task.name, task.objSprite, task.targetSprite);
+            }
+            else if (task.sabotaged)
+            {
+                LoadPoliceSabotageInfo(task);
+            }
+        }
+    }
+
+    void LoadPoliceSabotageInfo(Task task)
+    {
+        policeUis[task.uiOrder].nameText.text = task.name;
+        policeUis[task.uiOrder].objectImage.sprite = workerObjSprites[1];
+        policeUis[task.uiOrder].targetImage.sprite = workerTargetSprites[1];
+        policeUis[task.uiOrder].objective.sprite = workerObjSprites[3];
+        policeUis[task.uiOrder].percentage.text = (Mathf.RoundToInt(task.repairPercentage)) + " %";
+        task.myMinimapObj.GetComponent<Image>().sprite = workerTargetSprites[1];
+        if (!task.sabotaged)
+        {
+            WorkerTaskGetInfo(task.uiOrder, task.name, task.objSprite, task.targetSprite);
+        }
+    }
+
     void LoadSabotageInfo(Task task)
     {
         workerUis[task.uiOrder].nameText.text = task.name;
@@ -74,12 +119,23 @@ public class TaskUI : MonoBehaviour
 
     public void RemoveTask(Task task)
     {
-        finishedTasks.Add(task);
-        int t = activeTasks.IndexOf(task);
-        workerUis[t].myGameObject.SetActive(false);
-        Debug.Log("Removed " + task.goalName + " of index: " + t);
-        activeTasks[t] = null;
-        GetNewTask(t);
+        if (localPlayerRole == "civillian")
+        {
+            finishedTasks.Add(task);
+            int t = activeTasks.IndexOf(task);
+            workerUis[t].myGameObject.SetActive(false);
+            Debug.Log("Removed " + task.goalName + " of index: " + t);
+            activeTasks[t] = null;
+            GetNewTask(t);
+        }
+        else if (localPlayerRole == "police")
+        {
+            finishedTasks.Add(task);
+            int t = task.uiOrder;
+            policeUis[t].myGameObject.SetActive(false);
+            Debug.Log("Removed " + task.goalName + " of index: " + t);
+            activeTasks[t] = null;
+        }
     }
 
     void GetNewTask(int index)
@@ -129,7 +185,7 @@ public class TaskUI : MonoBehaviour
     public void GetStarterTasks(string role)
     {
         localPlayerRole = role;
-        if (localPlayerRole != "spy")
+        if (localPlayerRole == "civillian")
         {
             int o = Random.Range(0, manager.tasks.Count);
             //Debug.Log(o);
@@ -140,6 +196,13 @@ public class TaskUI : MonoBehaviour
             int tr = ThirdRand(o, t);
             //Debug.Log(tr);
             manager.tasks[tr].LoadTask(2);
+        }
+        else if (localPlayerRole == "police")
+        {
+            manager.tasks[0].LoadPoliceTask(0);
+            manager.tasks[1].LoadPoliceTask(1);
+            manager.tasks[2].LoadPoliceTask(2);
+            manager.tasks[3].LoadPoliceTask(3);
         }
     }
 
@@ -169,12 +232,31 @@ public class TaskUI : MonoBehaviour
         }
     }
 
+    public void GetTaskInfo(int uiPlacement, string name, int objImage, int trgtImage)
+    {
+        if (localPlayerRole == "civillian")
+        {
+            WorkerTaskGetInfo(uiPlacement, name, objImage, trgtImage);
+        }
+        else if (localPlayerRole == "police")
+        {
+            PoliceTaskGetInfo(uiPlacement, name, objImage, trgtImage);
+        }
+    }
+
     public void WorkerTaskGetInfo(int uiPlacement, string name, int objImage, int trgtImage)
     {
         workerUis[uiPlacement].nameText.text = name;
         workerUis[uiPlacement].objectImage.sprite = workerObjSprites[objImage];
         workerUis[uiPlacement].targetImage.sprite = workerTargetSprites[trgtImage];
         workerUis[uiPlacement].objective.sprite = workerObjSprites[2];
+    }
+    public void PoliceTaskGetInfo(int uiPlacement, string name, int objImage, int trgtImage)
+    {
+        policeUis[uiPlacement].nameText.text = name;
+        policeUis[uiPlacement].objectImage.sprite = workerObjSprites[objImage];
+        policeUis[uiPlacement].targetImage.sprite = workerTargetSprites[trgtImage];
+        policeUis[uiPlacement].objective.sprite = workerObjSprites[2];
     }
 }
 

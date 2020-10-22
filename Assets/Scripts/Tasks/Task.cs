@@ -62,10 +62,19 @@ public class Task : MonoBehaviour
     public void LoadTask(int uiPlacement)
     {
         uiOrder = uiPlacement;
-        taskUI.WorkerTaskGetInfo(uiOrder, goalName, objSprite, targetSprite);
+        taskUI.GetTaskInfo(uiOrder, goalName, objSprite, targetSprite);
         taskUI.LoadUI();
         taskUI.activeTasks[uiOrder] = this;
         active = true;
         //myMinimapObj.SetActive(true);
+    }
+
+    public void LoadPoliceTask(int uiPlacement)
+    {
+        uiOrder = uiPlacement;
+        taskUI.GetTaskInfo(uiOrder, goalName, objSprite, targetSprite);
+        taskUI.LoadUI();
+        //taskUI.activeTasks[uiOrder] = this;
+        active = true;
     }
 }

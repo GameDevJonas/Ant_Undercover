@@ -4762,6 +4762,10 @@ PrefabInstance:
       propertyPath: testTimerSet
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1210455851, guid: 9c5e2d939e1a43a4bab07497c2448ec8, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2245781362237241635, guid: 9c5e2d939e1a43a4bab07497c2448ec8, type: 3}
       propertyPath: m_LocalPosition.x
       value: -20.6
@@ -12270,6 +12274,10 @@ PrefabInstance:
     - target: {fileID: 2145952005, guid: 9e92355245c0af94d95d2c1176f46892, type: 3}
       propertyPath: timerSet
       value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2145952005, guid: 9e92355245c0af94d95d2c1176f46892, type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5023817959791653409, guid: 9e92355245c0af94d95d2c1176f46892, type: 3}
       propertyPath: m_Name
@@ -48268,6 +48276,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1054882584, guid: e5e8abac31e36ed4daeffb8ae2463f04, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3842988687363964558, guid: e5e8abac31e36ed4daeffb8ae2463f04, type: 3}
       propertyPath: m_Layer
       value: 12

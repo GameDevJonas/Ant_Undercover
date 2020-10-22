@@ -31,6 +31,8 @@ public class PileGoal : MonoBehaviour
 
     //public float testTimer, testTimerSet;
 
+    public ServerOnlyScript serverOnly;
+
     void Start()
     {
         myTask = GetComponent<Task>();
@@ -43,38 +45,45 @@ public class PileGoal : MonoBehaviour
         myTask.done = false;
         myTask.percentage = 0;
         myTask.sabotaged = sabotaged;
+        if (serverOnly == null && FindObjectOfType<ServerOnlyScript>())
+        {
+            serverOnly = FindObjectOfType<ServerOnlyScript>();
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
         StateUpdate();
-        if (player.myRole == "spy")
+        if (serverOnly == null)
         {
-            if (myState == GoalState.inProgress && player.canSabotage)
+            if (player.myRole == "spy")
             {
-                myTask.taskUI.ShowUiObject(myTask.spyMinimapObj);
+                if (myState == GoalState.inProgress && player.canSabotage)
+                {
+                    myTask.taskUI.ShowUiObject(myTask.spyMinimapObj);
+                }
+                else
+                {
+                    myTask.taskUI.CloseUiObject(myTask.spyMinimapObj);
+                }
+
             }
-            else 
-            {
-                myTask.taskUI.CloseUiObject(myTask.spyMinimapObj);
-            }
-            
-        }
-        else if(player.myRole == "police")
-        {
-            myTask.showOnUi = true;
-        }
-        else
-        {
-            myTask.taskUI.CloseUiObject(myTask.spyMinimapObj);
-            if (player.holding == whatDoINeed)
+            else if (player.myRole == "police")
             {
                 myTask.showOnUi = true;
             }
             else
             {
-                myTask.showOnUi = false;
+                myTask.taskUI.CloseUiObject(myTask.spyMinimapObj);
+                if (player.holding == whatDoINeed)
+                {
+                    myTask.showOnUi = true;
+                }
+                else
+                {
+                    myTask.showOnUi = false;
+                }
             }
         }
 
