@@ -6,6 +6,10 @@ using UnityEngine;
 
 public class TeamManager : MonoBehaviour
 {
+    public Collider spawnArea;
+
+    public Animator fader;
+
     public enum PlayerTeams { police, civillian, spy };
 
     public List<PlayerMovement> playersConnected = new List<PlayerMovement>();
@@ -17,12 +21,13 @@ public class TeamManager : MonoBehaviour
 
     public Mesh[] teamMeshes;
 
-    public bool gameStarted, pickedRole;
+    public bool gameStarted, pickedRole, doThisOnce;
 
     public int role;
 
     private void Start()
     {
+        doThisOnce = false;
         gameStarted = false;
         pickedRole = false;
     }
@@ -51,9 +56,11 @@ public class TeamManager : MonoBehaviour
         CheckForReadyPlayers();
         CheckForNullRefs();
 
-        if (!gameStarted && playersConnected.Count == playersReady.Count && playersConnected.Count > 0)
+        if (!doThisOnce && !gameStarted && playersConnected.Count == playersReady.Count && playersConnected.Count > 0)
         {
+            fader.SetBool("InFade", true);
             StartGame();
+            doThisOnce = true;
         }
 
         if (Input.GetKeyDown(KeyCode.K))
@@ -86,7 +93,7 @@ public class TeamManager : MonoBehaviour
         Debug.Log("Synced all clients");
         foreach (PlayerMovement player in playersConnected)
         {
-           player.GetComponent<PlayerTeam>().SyncAll();
+            player.GetComponent<PlayerTeam>().SyncAll();
         }
     }
 
@@ -138,6 +145,33 @@ public class TeamManager : MonoBehaviour
             }
         }
         Invoke("SyncAllClients", 3f);
+        //Her må spillere taes med ned til en spawn
+        MovePlayersDown();
+        StartCoroutine(GameStartCoroutine());
+    }
+
+    void MovePlayersDown()
+    {
+        foreach (PlayerMovement player in playersConnected)
+        {
+            player.GetComponent<CharacterController>().enabled = false;
+            Vector3 position = new Vector3(Random.Range(spawnArea.bounds.min.x, spawnArea.bounds.max.x), 1.12f, Random.Range(spawnArea.bounds.min.z, spawnArea.bounds.max.z));
+            player.gameObject.transform.position = position;
+        }
+        //fader.ResetTrigger("DoFade");
+    }
+
+    IEnumerator GameStartCoroutine()
+    {
+        yield return new WaitForSeconds(1f);
+        fader.SetBool("InFade", false);
+        yield return new WaitForSeconds(1f);
+        foreach (PlayerMovement player in playersConnected)
+        {
+            player.GetComponent<CharacterController>().enabled = true;
+        }
         gameStarted = true;
+        StopCoroutine(GameStartCoroutine());
+        yield return null;
     }
 }
