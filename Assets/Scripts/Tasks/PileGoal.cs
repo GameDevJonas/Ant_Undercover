@@ -115,8 +115,8 @@ public class PileGoal : MonoBehaviour
                 myTask.sabotaged = sabotaged;
                 normalObj.SetActive(true);
                 sabotagedObj.SetActive(false);
-                normalCanvas.gameObject.SetActive(playerInRange);
-                spyCanvas.gameObject.SetActive(spyInRange);
+                //normalCanvas.gameObject.SetActive(playerInRange);
+                //spyCanvas.gameObject.SetActive(spyInRange);
                 InProgressState();
                 break;
             case GoalState.done:
@@ -132,7 +132,7 @@ public class PileGoal : MonoBehaviour
                 myTask.sabotaged = sabotaged;
                 normalObj.SetActive(false);
                 sabotagedObj.SetActive(true);
-                sabotagedCanvas.gameObject.SetActive(true);
+                //sabotagedCanvas.gameObject.SetActive(true);
                 SabotagedState();
                 break;
         }
@@ -256,7 +256,7 @@ public class PileGoal : MonoBehaviour
     {
         if (myState == GoalState.inProgress)
         {
-            Debug.Log(i / 5);
+            //Debug.Log(i / 5);
             spyCanvas.GetComponentInChildren<Image>().fillAmount = i / 5;
             if (i / 5 >= 1)
             {

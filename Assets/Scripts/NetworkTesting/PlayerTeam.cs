@@ -31,7 +31,7 @@ public class PlayerTeam : NetworkBehaviour
 
     public TextMeshProUGUI leaveButtonText;
 
-    public GameObject policeSprite, civillianSprite, spySprite;
+    public GameObject policeSprite, civillianSprite, spySprite, policeUI, civillianUI, spyUI;
 
 
     private void Awake()
@@ -39,6 +39,9 @@ public class PlayerTeam : NetworkBehaviour
         civillianSprite.SetActive(false);
         policeSprite.SetActive(false);
         spySprite.SetActive(false);
+        civillianUI.SetActive(false);
+        policeUI.SetActive(false);
+        spyUI.SetActive(false);
         if (!isTestPlayer)
         {
             isReady = false;
@@ -457,7 +460,10 @@ public class PlayerTeam : NetworkBehaviour
             }
             ui.MakeUI();
             myCam.cullingMask = normalMask;
-
+            civillianUI.SetActive(false);
+            policeUI.SetActive(true);
+            spyUI.SetActive(false);
+            GetComponent<PlayerPileTask>().TurnOffAnim();
         }
     }
 
@@ -475,7 +481,10 @@ public class PlayerTeam : NetworkBehaviour
             }
             ui.MakeUI();
             myCam.cullingMask = normalMask;
-
+            civillianUI.SetActive(true);
+            policeUI.SetActive(false);
+            spyUI.SetActive(false);
+            GetComponent<PlayerPileTask>().TurnOffAnim();
         }
     }
 
@@ -494,7 +503,10 @@ public class PlayerTeam : NetworkBehaviour
             MAURMustache.SetActive(true);
             myCam.cullingMask = spyMask;
             GetComponent<PlayerPileTask>().canSabotage = true;
-            //Invoke("GetStarterTasks", .5f);
+            civillianUI.SetActive(false);
+            policeUI.SetActive(false);
+            spyUI.SetActive(true);
+            GetComponent<PlayerPileTask>().TurnOffAnim();
         }
     }
 

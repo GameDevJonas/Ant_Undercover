@@ -118,8 +118,8 @@ public class Pile : MonoBehaviour
 
     void CheckForCanvas()
     {
-        canvas.SetActive(playerInRange);
-        canvas.transform.LookAt(Camera.main.transform);
+        //canvas.SetActive(playerInRange);
+        //canvas.transform.LookAt(Camera.main.transform);
     }
 
     private void OnTriggerStay(Collider other)

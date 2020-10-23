@@ -18,20 +18,31 @@ public class PlayerAnterrogationBehaviour : NetworkBehaviour
 
     public Collider hitbox;
 
+    public Animator myAnim;
+
     void Start()
     {
         myCam = GetComponentInChildren<CinemachineFreeLook>();
         manager = FindObjectOfType<Anterrogation>();
-        if(isLocalPlayer)
-        hitbox.gameObject.SetActive(false);
+        if (isLocalPlayer)
+            hitbox.gameObject.SetActive(false);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(player.myTeam == TeamManager.PlayerTeams.police)
+        if (player.myTeam == TeamManager.PlayerTeams.police)
         {
-            if(isLocalPlayer && Input.GetKeyDown(KeyCode.E) && playerInRange && manager.ableToAnterrogate)
+            if (isLocalPlayer && manager.ableToAnterrogate && playerInRange)
+            {
+                myAnim.SetBool("IsIdle", false);
+            }
+            else
+            {
+                myAnim.SetBool("IsIdle", true);
+            }
+
+            if (isLocalPlayer && Input.GetKeyDown(KeyCode.E) && playerInRange && manager.ableToAnterrogate)
             {
                 Debug.Log("Started anterrogation with " + this.gameObject + " as police, and " + playerInRangeOf.gameObject + "as other player.");
                 CmdCallArrogation(playerInRangeOf);
@@ -53,15 +64,15 @@ public class PlayerAnterrogationBehaviour : NetworkBehaviour
 
     public void ChangeCam(CinemachineVirtualCamera newCam, int priority)
     {
-        if(isLocalPlayer)
-        newCam.Priority = priority;
+        if (isLocalPlayer)
+            newCam.Priority = priority;
     }
 
     private void OnTriggerStay(Collider other)
     {
         if (other.gameObject.CompareTag("PlayerHitbox"))
         {
-            if(player.myTeam == TeamManager.PlayerTeams.police && other.gameObject.GetComponentInParent<PlayerTeam>().myTeam != TeamManager.PlayerTeams.police)
+            if (player.myTeam == TeamManager.PlayerTeams.police && other.gameObject.GetComponentInParent<PlayerTeam>().myTeam != TeamManager.PlayerTeams.police)
             {
                 Debug.Log("Trigger");
                 playerInRange = true;

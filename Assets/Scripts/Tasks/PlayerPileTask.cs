@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
+using UnityEngine.UI;
 
 public class PlayerPileTask : NetworkBehaviour
 {
@@ -19,8 +20,13 @@ public class PlayerPileTask : NetworkBehaviour
 
     public string holding, myRole;
 
+    public Animator civillianAnim, spyAnim, spyPickup;
+    public Image spySabotager;
+
     void Start()
     {
+        spyPickup.SetBool("IsIdle", true);
+        civillianAnim.SetBool("IsIdle", true);
         reloadTimer = 60;
         holdingItem = false;
         arrowOn = false;
@@ -34,6 +40,12 @@ public class PlayerPileTask : NetworkBehaviour
             }
         }
         canSabotage = true;
+    }
+
+    public void TurnOffAnim()
+    {
+        spyPickup.SetBool("IsIdle", true);
+        civillianAnim.SetBool("IsIdle", true);
     }
 
     // Update is called once per frame
@@ -67,27 +79,31 @@ public class PlayerPileTask : NetworkBehaviour
     }
 
     #region Sabotage funcs
-   void ReloadSabotage()
+    void ReloadSabotage()
     {
-        if(reloadTimer <= 0)
+        if (reloadTimer >= 60)
         {
             canSabotage = true;
-            reloadTimer = 60;
+            reloadTimer = 0;
             sabotageReload = false;
         }
         else
         {
-            reloadTimer -= Time.deltaTime;
+            spyAnim.GetComponent<Image>().fillAmount = reloadTimer / 60;
+            Debug.Log(reloadTimer / 60);
+            reloadTimer += Time.deltaTime;
         }
     }
-    
+
     void SabotageUpdate()
     {
-        if (canSabotage && isLocalPlayer)
+        if (canSabotage && isLocalPlayer && currentGoal != null && myRole == "spy")
         {
+            spyAnim.SetBool("IsIdle", false);
             if (Input.GetKeyDown(KeyCode.E))
             {
                 sabotageValue = 0;
+                spySabotager.fillAmount = 0;
                 //if (isLocalPlayer)
                 CmdSabotageZero();
             }
@@ -95,12 +111,18 @@ public class PlayerPileTask : NetworkBehaviour
             {
                 float value = sabotageValue += Time.deltaTime;
                 currentGoal.Sabotager(value);
+                spySabotager.fillAmount = value / 5;
+                if(value == 5)
+                {
+                    spySabotager.fillAmount = 0;
+                }
                 CmdAddSabotage(value);
                 //if (isLocalPlayer)
             }
             if (Input.GetKeyUp(KeyCode.E))
             {
                 sabotageValue = 0;
+                spySabotager.fillAmount = 0;
                 currentGoal.Sabotager(sabotageValue);
                 CmdResetSabotage();
                 //if (currentGoal.myState != PileGoal.GoalState.sabotaged)
@@ -108,6 +130,12 @@ public class PlayerPileTask : NetworkBehaviour
                 //    canSabotage = true;
                 //}
             }
+        }
+        else if (isLocalPlayer)
+        {
+            spyAnim.SetBool("IsIdle", true);
+            sabotageValue = 0;
+            spySabotager.fillAmount = 0;
         }
     }
 
@@ -146,7 +174,7 @@ public class PlayerPileTask : NetworkBehaviour
     public void RpcAddSabotage(float v)
     {
         currentGoal.Sabotager(v);
-        if(v / 5 >= 1)
+        if (v / 5 >= 1)
         {
             canSabotage = false;
             sabotageReload = true;
@@ -212,6 +240,7 @@ public class PlayerPileTask : NetworkBehaviour
                 //    //RpcPutOnGoal("Stick", currentGoal.gameObject, myRole);
                 //stickObj.SetActive(false);
             }
+            civillianAnim.SetBool("IsIdle", true);
             //if (!isServer)
             //{
             //currentGoal.PlayerGiveItem(holding, myRole);
@@ -277,6 +306,8 @@ public class PlayerPileTask : NetworkBehaviour
                         //if (isServer)
                         //RpcObjectsOnOff("Stick", false);
                     }
+                    spyPickup.SetBool("IsIdle", true);
+                    civillianAnim.SetBool("IsIdle", true);
                     //holding = null;
                     //holdingItem = false;
                 }
@@ -381,10 +412,14 @@ public class PlayerPileTask : NetworkBehaviour
             if (!holdingItem)
             {
                 canPickUp = true;
+                spyPickup.SetBool("IsIdle", false);
+                civillianAnim.SetBool("IsIdle", false);
             }
             else
             {
                 canPickUp = false;
+                spyPickup.SetBool("IsIdle", true);
+                civillianAnim.SetBool("IsIdle", true);
             }
         }
         /*
@@ -403,6 +438,7 @@ public class PlayerPileTask : NetworkBehaviour
             if (holdingItem && holding == other.gameObject.GetComponent<PileGoal>().whatDoINeed /* && other.gameObject.GetComponent<TestingGoalVTwo>().objectsPlaced < other.gameObject.GetComponent<TestingGoalVTwo>().objectsNeeded && !other.gameObject.GetComponent<TestingGoalVTwo>().sabotaged*/)
             {
                 canDeliver = true;
+                civillianAnim.SetBool("IsIdle", false);
             }
         }
     }
@@ -413,6 +449,8 @@ public class PlayerPileTask : NetworkBehaviour
         {
             canPickUp = false;
             currentPile = null;
+            spyPickup.SetBool("IsIdle", true);
+            civillianAnim.SetBool("IsIdle", true);
         }
         /*
         if (other.gameObject.GetComponent<TestingGoal>() && holdingItem)
@@ -425,6 +463,14 @@ public class PlayerPileTask : NetworkBehaviour
         {
             canDeliver = false;
             currentGoal = null;
+            spyPickup.SetBool("IsIdle", true);
+            civillianAnim.SetBool("IsIdle", true);
+        }
+        else if(other.gameObject.GetComponent<PileGoal>())
+        {
+            currentGoal = null;
+            spyPickup.SetBool("IsIdle", true);
+            civillianAnim.SetBool("IsIdle", true);
         }
     }
 }
