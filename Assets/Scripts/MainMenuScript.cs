@@ -19,6 +19,8 @@ public class MainMenuScript : MonoBehaviour
 
     void Start()
     {
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
         manager = FindObjectOfType<NetworkManager>();
         if (serverOnly)
         {

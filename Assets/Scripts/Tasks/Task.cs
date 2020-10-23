@@ -22,6 +22,7 @@ public class Task : MonoBehaviour
     void Start()
     {
         myMinimapObj.SetActive(false);
+        spyMinimapObj.SetActive(false);
         active = false;
         removed = false;
         //taskUI = FindObjectOfType<TaskUI>();

@@ -14,7 +14,7 @@ public class PlayerAnterrogationBehaviour : NetworkBehaviour
 
     public bool playerInRange;
 
-    public GameObject playerInRangeOf;
+    public GameObject playerInRangeOf, policeUI;
 
     public Collider hitbox;
 
@@ -22,6 +22,7 @@ public class PlayerAnterrogationBehaviour : NetworkBehaviour
 
     void Start()
     {
+        policeUI.SetActive(false);
         myCam = GetComponentInChildren<CinemachineFreeLook>();
         manager = FindObjectOfType<Anterrogation>();
         if (isLocalPlayer)
@@ -49,6 +50,52 @@ public class PlayerAnterrogationBehaviour : NetworkBehaviour
             }
         }
     }
+
+    public void OpenUI()
+    {
+        policeUI.SetActive(true);
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+    }
+
+    public void PoliceOptions(bool yes)
+    {
+        if (yes)
+        {
+            CmdSayYes();
+        }
+        else
+        {
+            CmdSayNo();
+        }
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+    }
+
+    [Command]
+    void CmdSayYes()
+    {
+        RpcSayYes();
+    }
+    [Command]
+    void CmdSayNo()
+    {
+        RpcSayNo();
+    }
+
+    [ClientRpc]
+    public void RpcSayYes()
+    {
+        manager.ThrowInJail();
+        policeUI.SetActive(false);
+    }
+    [ClientRpc]
+    public void RpcSayNo()
+    {
+        manager.LetGo();
+        policeUI.SetActive(false);
+    }
+
 
     [Command]
     void CmdCallArrogation(GameObject otherP)

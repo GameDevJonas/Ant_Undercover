@@ -55,7 +55,7 @@ public class PlayerPileTask : NetworkBehaviour
 
         if (myRole == "police")
         {
-            GetComponent<PlayerMovement>().playerSpeed = holdingSpeed;
+            GetComponent<PlayerMovement>().playerSpeed = normalSpeed;
             return;
         }
 

@@ -31,11 +31,13 @@ public class PlayerTeam : NetworkBehaviour
 
     public TextMeshProUGUI leaveButtonText;
 
-    public GameObject policeSprite, civillianSprite, spySprite, policeUI, civillianUI, spyUI;
+    public GameObject policeSprite, civillianSprite, spySprite, policeUI, civillianUI, spyUI, readyText;
 
 
     private void Awake()
     {
+        readyText.SetActive(true);
+        readyText.GetComponentInChildren<TextMeshProUGUI>().color = Color.red;
         civillianSprite.SetActive(false);
         policeSprite.SetActive(false);
         spySprite.SetActive(false);
@@ -47,6 +49,7 @@ public class PlayerTeam : NetworkBehaviour
             isReady = false;
         }
         FindObjectOfType<TeamManager>().playersConnected.Add(GetComponentInParent<PlayerMovement>());
+        FindObjectOfType<RolePicker>().unassignedPlayers.Add(this);
         MAURMustache.SetActive(false);
         //myCam = Camera.main;
         mesh = GetComponentInChildren<MeshFilter>();
@@ -206,7 +209,7 @@ public class PlayerTeam : NetworkBehaviour
     {
         if (isLocalPlayer)
         {
-            CmdSyncRoleWithServer(myTeam);
+            //CmdSyncRoleWithServer(myTeam);
             Invoke("GetStarterTasks", .5f);
 
         }
@@ -448,66 +451,60 @@ public class PlayerTeam : NetworkBehaviour
 
     public void PickPolice()
     {
-        //if (isLocalPlayer)
+        readyText.SetActive(false);
+        MAURMustache.SetActive(false);
+        myTeam = TeamManager.PlayerTeams.police;
+        mesh.mesh = manager.teamMeshes[0];
+        RpcSyncRoleWithClient(myTeam);
+        if (isLocalPlayer)
         {
-            MAURMustache.SetActive(false);
-            myTeam = TeamManager.PlayerTeams.police;
-            mesh.mesh = manager.teamMeshes[0];
-            if (isLocalPlayer)
-            {
-                CmdSyncRoleWithServer(myTeam);
-                RpcSyncRoleWithClient(myTeam);
-            }
-            ui.MakeUI();
-            myCam.cullingMask = normalMask;
-            civillianUI.SetActive(false);
-            policeUI.SetActive(true);
-            spyUI.SetActive(false);
-            GetComponent<PlayerPileTask>().TurnOffAnim();
+            //CmdSyncRoleWithServer(myTeam);
         }
+        ui.MakeUI();
+        myCam.cullingMask = normalMask;
+        civillianUI.SetActive(false);
+        policeUI.SetActive(true);
+        spyUI.SetActive(false);
+        GetComponent<PlayerPileTask>().TurnOffAnim();
     }
 
     public void PickWorker()
     {
-        //if (isLocalPlayer)
+        readyText.SetActive(false);
+        MAURMustache.SetActive(false);
+        myTeam = TeamManager.PlayerTeams.civillian;
+        mesh.mesh = manager.teamMeshes[1];
+        RpcSyncRoleWithClient(myTeam);
+        if (isLocalPlayer)
         {
-            MAURMustache.SetActive(false);
-            myTeam = TeamManager.PlayerTeams.civillian;
-            mesh.mesh = manager.teamMeshes[1];
-            if (isLocalPlayer)
-            {
-                CmdSyncRoleWithServer(myTeam);
-                RpcSyncRoleWithClient(myTeam);
-            }
-            ui.MakeUI();
-            myCam.cullingMask = normalMask;
-            civillianUI.SetActive(true);
-            policeUI.SetActive(false);
-            spyUI.SetActive(false);
-            GetComponent<PlayerPileTask>().TurnOffAnim();
+            //CmdSyncRoleWithServer(myTeam);
         }
+        ui.MakeUI();
+        myCam.cullingMask = normalMask;
+        civillianUI.SetActive(true);
+        policeUI.SetActive(false);
+        spyUI.SetActive(false);
+        GetComponent<PlayerPileTask>().TurnOffAnim();
     }
 
     public void PickSpy()
     {
-        //if (isLocalPlayer)
+        readyText.SetActive(false);
+        myTeam = TeamManager.PlayerTeams.spy;
+        mesh.mesh = manager.teamMeshes[1];
+        RpcSyncRoleWithClient(myTeam);
+        if (isLocalPlayer)
         {
-            myTeam = TeamManager.PlayerTeams.spy;
-            mesh.mesh = manager.teamMeshes[1];
-            if (isLocalPlayer)
-            {
-                CmdSyncRoleWithServer(myTeam);
-                RpcSyncRoleWithClient(myTeam);
-            }
-            ui.MakeUI();
-            MAURMustache.SetActive(true);
-            myCam.cullingMask = spyMask;
-            GetComponent<PlayerPileTask>().canSabotage = true;
-            civillianUI.SetActive(false);
-            policeUI.SetActive(false);
-            spyUI.SetActive(true);
-            GetComponent<PlayerPileTask>().TurnOffAnim();
+            //CmdSyncRoleWithServer(myTeam);
         }
+        ui.MakeUI();
+        MAURMustache.SetActive(true);
+        myCam.cullingMask = spyMask;
+        GetComponent<PlayerPileTask>().canSabotage = true;
+        civillianUI.SetActive(false);
+        policeUI.SetActive(false);
+        spyUI.SetActive(true);
+        GetComponent<PlayerPileTask>().TurnOffAnim();
     }
 
     private void Update()
@@ -516,6 +513,8 @@ public class PlayerTeam : NetworkBehaviour
         {
             Debug.Log(gameObject.name + " is ready", gameObject);
             isReady = true;
+            readyText.GetComponentInChildren<TextMeshProUGUI>().text = "You are ready!";
+            readyText.GetComponentInChildren<TextMeshProUGUI>().color = Color.green;
             CmdReadyUp(true);
         }
 

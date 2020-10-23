@@ -10,7 +10,7 @@ public class PlayerMovement : NetworkBehaviour
 
     private CharacterController controller;
     private Vector3 playerVelocity;
-    private bool groundedPlayer;
+    private bool groundedPlayer, cursorVisible;
     public float playerSpeed = 2.0f;
     public float jumpHeight = 1.0f;
     public float gravityValue = -9.81f;
@@ -50,6 +50,25 @@ public class PlayerMovement : NetworkBehaviour
             GetInputs();
             RotatePlayer();
             MovePlayer();
+            if(xInput != 0 && yInput != 0)
+            {
+                float playerS = playerSpeed / 2;
+                playerSpeed = playerS;
+            }
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                cursorVisible = !cursorVisible;
+            }
+            if (cursorVisible)
+            {
+                Cursor.visible = true;
+                Cursor.lockState = CursorLockMode.None;
+            }
+            else
+            {
+                Cursor.visible = false;
+                Cursor.lockState = CursorLockMode.Locked;
+            }
         }
     }
 

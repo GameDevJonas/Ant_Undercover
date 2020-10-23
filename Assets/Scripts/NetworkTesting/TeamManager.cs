@@ -12,6 +12,8 @@ public class TeamManager : MonoBehaviour
 
     public enum PlayerTeams { police, civillian, spy };
 
+    public RolePicker roleList;
+
     public List<PlayerMovement> playersConnected = new List<PlayerMovement>();
     public List<PlayerTeam> playersReady = new List<PlayerTeam>();
 
@@ -21,7 +23,7 @@ public class TeamManager : MonoBehaviour
 
     public Mesh[] teamMeshes;
 
-    public bool gameStarted, pickedRole, doThisOnce;
+    public bool gameStarted, pickedRole, doThisOnce, testing;
 
     public int role;
 
@@ -30,6 +32,8 @@ public class TeamManager : MonoBehaviour
         doThisOnce = false;
         gameStarted = false;
         pickedRole = false;
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     public void AddToList(PlayerTeam playerToAdd)
@@ -56,7 +60,7 @@ public class TeamManager : MonoBehaviour
         CheckForReadyPlayers();
         CheckForNullRefs();
 
-        if (!doThisOnce && !gameStarted && playersConnected.Count == playersReady.Count && playersConnected.Count > 0)
+        if ((playersConnected.Count >= 4 || testing) && !doThisOnce && !gameStarted && playersConnected.Count == playersReady.Count && playersConnected.Count > 0)
         {
             fader.SetBool("InFade", true);
             StartGame();
@@ -66,6 +70,10 @@ public class TeamManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.K))
         {
             SyncAllClients();
+        }
+        if (roleList == null)
+        {
+            roleList = FindObjectOfType<RolePicker>();
         }
     }
 
@@ -106,6 +114,7 @@ public class TeamManager : MonoBehaviour
                 if (!playersReady.Contains(player.GetComponent<PlayerTeam>()))
                 {
                     playersReady.Add(player.GetComponent<PlayerTeam>());
+                    //playerWithoutRoles.Add(player.GetComponent<PlayerTeam>());
                 }
             }
         }
@@ -125,8 +134,42 @@ public class TeamManager : MonoBehaviour
     void StartGame()
     {
         Debug.Log("Game started");
-        foreach (PlayerTeam player in playersReady)
+        #region old
+        //int playerNum = 0;
+        /*foreach (PlayerTeam player in playersReady)
         {
+            /*int num = Random.Range(0, playerWithoutRoles.Count);
+            playerRoles.Add(playerWithoutRoles[num]);
+            playerWithoutRoles.Remove(playerRoles[playerNum]);
+            playerNum++;
+
+            int index = playerRoles.IndexOf(player);
+            switch (index)
+            {
+                case 0:
+                    player.PickPolice();
+                    break;
+                case 1:
+                    player.PickSpy();
+                    break;
+            }
+
+            /*switch (playersConnected.Count)
+            {
+                case 1:
+                    playerRoles[0].PickPolice();
+                    break;
+                case 2:
+                    playerRoles[0].PickPolice();
+                    playerRoles[1].PickSpy();
+                    break;
+                case 3:
+                    playerRoles[0].PickPolice();
+                    playerRoles[1].PickSpy();
+                    playerRoles[2].PickWorker();
+                    break;
+            }
+
             if (!pickedRole)
             {
                 role = Random.Range(0, 3);
@@ -143,7 +186,18 @@ public class TeamManager : MonoBehaviour
                     player.PickSpy();
                     break;
             }
+        }*/
+        #endregion
+        foreach (PlayerTeam player in playersReady)
+        {
+            Debug.Log(player, player);
+            roleList.PickRoles();
         }
+    }
+
+    public void ContinueStart()
+    {
+        //SyncAllClients();
         Invoke("SyncAllClients", 3f);
         //Her må spillere taes med ned til en spawn
         MovePlayersDown();
@@ -165,7 +219,7 @@ public class TeamManager : MonoBehaviour
     {
         yield return new WaitForSeconds(1f);
         fader.SetBool("InFade", false);
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(2f);
         foreach (PlayerMovement player in playersConnected)
         {
             player.GetComponent<CharacterController>().enabled = true;

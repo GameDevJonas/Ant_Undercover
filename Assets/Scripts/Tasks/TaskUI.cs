@@ -43,6 +43,11 @@ public class TaskUI : MonoBehaviour
             LoadPoliceProgress();
             workerUI.SetActive(false);
             policeUI.SetActive(true);
+            foreach(Task task in manager.tasks)
+            {
+                if(task.spyMinimapObj.activeSelf)
+                task.spyMinimapObj.SetActive(false);
+            }
         }
     }
 

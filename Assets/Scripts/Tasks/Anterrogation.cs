@@ -64,32 +64,48 @@ public class Anterrogation : MonoBehaviour
         startAnterrogation = true;
     }
 
-    void ExitAnterrogation()
+    void ExitAnterrogation(bool jail)
     {
         policeP.transform.position = exitOne.position;
         policeP.transform.rotation = exitOne.rotation;
         policeP.GetComponent<PlayerMovement>().enabled = true;
         policeP.GetComponent<CharacterController>().enabled = true;
         policeP.GetComponent<PlayerAnterrogationBehaviour>().ChangeCam(myCam, 9);
-        otherP.transform.position = exitTwo.transform.position;
-        otherP.transform.rotation = exitTwo.transform.rotation;
         otherP.GetComponent<PlayerMovement>().enabled = true;
         otherP.GetComponent<CharacterController>().enabled = true;
         otherP.GetComponent<PlayerAnterrogationBehaviour>().ChangeCam(myCam, 9);
-        ableToAnterrogate = true;
+        if (!jail)
+        {
+            otherP.transform.position = exitTwo.transform.position;
+            otherP.transform.rotation = exitTwo.transform.rotation;
+            ableToAnterrogate = true;
+        }
     }
 
     void AnterrogationTimer()
     {
         if (timer <= 0)
         {
-            ExitAnterrogation();
-            timer = timerSet;
-            startAnterrogation = false;
+            policeP.GetComponent<PlayerAnterrogationBehaviour>().OpenUI();
+
         }
         else
         {
             timer -= Time.deltaTime;
         }
+    }
+
+    public void ThrowInJail()
+    {
+        ExitAnterrogation(true);
+        timer = timerSet;
+        startAnterrogation = false;
+    }
+
+    public void LetGo()
+    {
+        ExitAnterrogation(false);
+        timer = timerSet;
+        startAnterrogation = false;
     }
 }
