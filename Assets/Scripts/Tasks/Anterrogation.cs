@@ -5,11 +5,11 @@ using Cinemachine;
 
 public class Anterrogation : MonoBehaviour
 {
-    public GameObject door, policeP, otherP;
+    public GameObject door, policeP, otherP, myMinimapObj;
 
     public Transform policePlace, otherPlace, exitOne, exitTwo;
 
-    public bool startAnterrogation, playersNotExited, ableToAnterrogate;
+    public bool startAnterrogation, playersNotExited, ableToAnterrogate, activatedUI;
 
     public float timerSet, timer;
 
@@ -19,7 +19,8 @@ public class Anterrogation : MonoBehaviour
 
     void Start()
     {
-        //door.SetActive(false);
+        activatedUI = false;
+        myMinimapObj.SetActive(false);
         myCam.gameObject.SetActive(false);
         startAnterrogation = false;
         ableToAnterrogate = true;
@@ -32,11 +33,17 @@ public class Anterrogation : MonoBehaviour
         if (FindObjectOfType<TeamManager>().gameStarted)
         {
             myCam.gameObject.SetActive(true);
+            if (!activatedUI)
+            {
+                myMinimapObj.SetActive(true);
+                activatedUI = true;
+            }
         }
         if (startAnterrogation)
         {
             AnterrogationTimer();
         }
+        myMinimapObj.GetComponent<Animator>().SetBool("IsIdle", startAnterrogation);
     }
 
     public void DoAnAnterrogation(GameObject policePlayer, GameObject otherPlayer)
@@ -46,10 +53,12 @@ public class Anterrogation : MonoBehaviour
         policePlayer.transform.position = policePlace.position;
         policePlayer.transform.rotation = policePlace.rotation;
         policePlayer.GetComponent<PlayerMovement>().enabled = false;
+        policePlayer.GetComponent<CharacterController>().enabled = false;
         policePlayer.GetComponent<PlayerAnterrogationBehaviour>().ChangeCam(myCam, 11);
         otherPlayer.transform.position = otherPlace.transform.position;
         otherPlayer.transform.rotation = otherPlace.transform.rotation;
         otherPlayer.GetComponent<PlayerMovement>().enabled = false;
+        otherPlayer.GetComponent<CharacterController>().enabled = false;
         otherPlayer.GetComponent<PlayerAnterrogationBehaviour>().ChangeCam(myCam, 11);
         ableToAnterrogate = false;
         startAnterrogation = true;
@@ -60,17 +69,19 @@ public class Anterrogation : MonoBehaviour
         policeP.transform.position = exitOne.position;
         policeP.transform.rotation = exitOne.rotation;
         policeP.GetComponent<PlayerMovement>().enabled = true;
+        policeP.GetComponent<CharacterController>().enabled = true;
         policeP.GetComponent<PlayerAnterrogationBehaviour>().ChangeCam(myCam, 9);
         otherP.transform.position = exitTwo.transform.position;
         otherP.transform.rotation = exitTwo.transform.rotation;
         otherP.GetComponent<PlayerMovement>().enabled = true;
+        otherP.GetComponent<CharacterController>().enabled = true;
         otherP.GetComponent<PlayerAnterrogationBehaviour>().ChangeCam(myCam, 9);
         ableToAnterrogate = true;
     }
 
     void AnterrogationTimer()
     {
-        if(timer <= 0)
+        if (timer <= 0)
         {
             ExitAnterrogation();
             timer = timerSet;

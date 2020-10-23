@@ -258,10 +258,10 @@ public class PileGoal : MonoBehaviour
         {
             //Debug.Log(i / 5);
             spyCanvas.GetComponentInChildren<Image>().fillAmount = i / 5;
-            if (i / 5 >= 1)
+            if (i >= 5)
             {
                 sabotaged = true;
-                //player.canSabotage = false;
+                player.canSabotage = false;
                 spyCanvas.GetComponentInChildren<Image>().fillAmount = 0;
                 myState = GoalState.sabotaged;
             }

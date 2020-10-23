@@ -27,7 +27,7 @@ public class PlayerPileTask : NetworkBehaviour
     {
         spyPickup.SetBool("IsIdle", true);
         civillianAnim.SetBool("IsIdle", true);
-        reloadTimer = 60;
+        reloadTimer = 0;
         holdingItem = false;
         arrowOn = false;
         leafObj.SetActive(false);
@@ -110,12 +110,14 @@ public class PlayerPileTask : NetworkBehaviour
             if (Input.GetKey(KeyCode.E))
             {
                 float value = sabotageValue += Time.deltaTime;
+                //if(value == 5)
+                //{
+                //    canSabotage = false;
+                //    sabotageReload = true;
+                //    spySabotager.fillAmount = 0;
+                //}
                 currentGoal.Sabotager(value);
                 spySabotager.fillAmount = value / 5;
-                if(value == 5)
-                {
-                    spySabotager.fillAmount = 0;
-                }
                 CmdAddSabotage(value);
                 //if (isLocalPlayer)
             }
@@ -174,8 +176,9 @@ public class PlayerPileTask : NetworkBehaviour
     public void RpcAddSabotage(float v)
     {
         currentGoal.Sabotager(v);
-        if (v / 5 >= 1)
+        if (v >= 5)
         {
+            spySabotager.fillAmount = 0;
             canSabotage = false;
             sabotageReload = true;
         }
