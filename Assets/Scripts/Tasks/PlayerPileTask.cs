@@ -8,7 +8,7 @@ public class PlayerPileTask : NetworkBehaviour
 {
     public bool holdingItem, canPickUp, canDeliver, arrowOn, canSabotage, sabotageReload;
 
-    public float holdingSpeed, normalSpeed, sabotageValue, reloadTimer;
+    public float holdingSpeed, normalSpeed, policeSpeed, sabotageValue, reloadTimer, sabotageCooldown, sabotageTime;
 
     public Transform holdPoint;
 
@@ -25,6 +25,20 @@ public class PlayerPileTask : NetworkBehaviour
 
     void Start()
     {
+        //HostOptions host;
+        //foreach (HostOptions hostOptions in FindObjectsOfType<HostOptions>())
+        //{
+        //    if (hostOptions.isHost)
+        //    {
+        //        host = hostOptions;
+        //        holdingSpeed = host.holdingSpeed;
+        //        normalSpeed = host.normalSpeed;
+        //        policeSpeed = host.policeSpeed;
+        //        sabotageTime = host.taskSpeed + host.taskSpeed / 4;
+        //        sabotageCooldown = host.sabotageCooldown;
+        //    }
+        //}
+
         spyPickup.SetBool("IsIdle", true);
         civillianAnim.SetBool("IsIdle", true);
         reloadTimer = 0;
@@ -51,11 +65,12 @@ public class PlayerPileTask : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
+        //Debug.Log(FindObjectsOfType<HostOptions>().Length);
         myRole = GetComponent<PlayerTeam>().myTeam.ToString();
 
         if (myRole == "police")
         {
-            GetComponent<PlayerMovement>().playerSpeed = normalSpeed;
+            GetComponent<PlayerMovement>().playerSpeed = policeSpeed;
             return;
         }
 
@@ -81,7 +96,7 @@ public class PlayerPileTask : NetworkBehaviour
     #region Sabotage funcs
     void ReloadSabotage()
     {
-        if (reloadTimer >= 60)
+        if (reloadTimer >= sabotageCooldown)
         {
             canSabotage = true;
             reloadTimer = 0;
@@ -89,8 +104,8 @@ public class PlayerPileTask : NetworkBehaviour
         }
         else
         {
-            spyAnim.GetComponent<Image>().fillAmount = reloadTimer / 60;
-            Debug.Log(reloadTimer / 60);
+            spyAnim.GetComponent<Image>().fillAmount = reloadTimer / sabotageCooldown;
+            Debug.Log(reloadTimer / sabotageCooldown);
             reloadTimer += Time.deltaTime;
         }
     }
@@ -117,7 +132,7 @@ public class PlayerPileTask : NetworkBehaviour
                 //    spySabotager.fillAmount = 0;
                 //}
                 currentGoal.Sabotager(value);
-                spySabotager.fillAmount = value / 5;
+                spySabotager.fillAmount = value / sabotageTime;
                 CmdAddSabotage(value);
                 //if (isLocalPlayer)
             }
@@ -176,7 +191,7 @@ public class PlayerPileTask : NetworkBehaviour
     public void RpcAddSabotage(float v)
     {
         currentGoal.Sabotager(v);
-        if (v >= 5)
+        if (v >= sabotageTime)
         {
             spySabotager.fillAmount = 0;
             canSabotage = false;
@@ -469,7 +484,7 @@ public class PlayerPileTask : NetworkBehaviour
             spyPickup.SetBool("IsIdle", true);
             civillianAnim.SetBool("IsIdle", true);
         }
-        else if(other.gameObject.GetComponent<PileGoal>())
+        else if (other.gameObject.GetComponent<PileGoal>())
         {
             currentGoal = null;
             spyPickup.SetBool("IsIdle", true);

@@ -8,6 +8,8 @@ using System.Security.Authentication.ExtendedProtection;
 
 public class RolePicker : NetworkBehaviour
 {
+    public Anterrogation anterrogationManager;
+
     public List<PlayerTeam> unassignedPlayers = new List<PlayerTeam>();
     public List<PlayerTeam> playerRoles = new List<PlayerTeam>();
 
@@ -49,7 +51,6 @@ public class RolePicker : NetworkBehaviour
             switch (playerRoles.IndexOf(p))
             {
                 case 0: //Police
-                    Debug.Log("case 0");
                     player = playerRoles[0].gameObject;
                     role = 0;
                     //player.GetComponent<PlayerTeam>().PickPolice();

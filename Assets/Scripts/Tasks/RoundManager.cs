@@ -9,6 +9,7 @@ using UnityEngine.SceneManagement;
 public class RoundManager : MonoBehaviour
 {
     public float gameTimer, gameTimerSet;
+    public int minutes, seconds;
 
     public List<Task> tasks = new List<Task>();
     public List<Task> doneTasks = new List<Task>();
@@ -19,8 +20,23 @@ public class RoundManager : MonoBehaviour
 
     public GameObject spyWinObj, policeWinObj;
 
+    public Color normalTimerColor, lastTimerColor;
+    public Animator timerAnim;
+
     void Start()
     {
+        //HostOptions host;
+        //foreach (HostOptions hostOptions in FindObjectsOfType<HostOptions>())
+        //{
+        //    if (hostOptions.isHost)
+        //    {
+        //        host = hostOptions;
+        //        gameTimer = host.gameTime;
+        //    }
+        //}
+        timerAnim.SetBool("LastBool", false);
+        timerText.text = "";
+
         spyWinObj.SetActive(false);
         policeWinObj.SetActive(false);
         gameDone = false;
@@ -28,12 +44,15 @@ public class RoundManager : MonoBehaviour
         {
             tasks.Add(g);
         }
-        gameTimer = gameTimerSet * 60;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (!FindObjectOfType<TeamManager>().gameStarted)
+        {
+            gameTimer = gameTimerSet * 60;
+        }
         GoalChecker();
         if (!gameDone)
         {
@@ -86,6 +105,8 @@ public class RoundManager : MonoBehaviour
         {
             if (gameTimer <= 0)
             {
+                timerAnim.SetBool("LastBool", false);
+                timerText.text = "";
                 spyWin = true;
                 gameDone = true;
             }
@@ -93,8 +114,25 @@ public class RoundManager : MonoBehaviour
             {
                 gameTimer -= Time.deltaTime;
             }
+            minutes = Mathf.FloorToInt(gameTimer / 60);
+            seconds = Mathf.FloorToInt(gameTimer - minutes * 60);
+            string niceTime = string.Format("{0:0}:{1:00}", minutes, seconds);
             double timeInText = Math.Round((double)gameTimer, 2);
-            timerText.text = timeInText.ToString();
+
+            if (gameTimer >= 0)
+            {
+                if (gameTimer >= 31)
+                {
+                    timerText.color = normalTimerColor;
+                    timerText.text = niceTime;
+                }
+                else
+                {
+                    timerAnim.SetBool("LastBool", true);
+                    timerText.color = lastTimerColor;
+                    timerText.text = (double)timeInText + "";
+                }
+            }
         }
     }
 }

@@ -15,10 +15,11 @@ public class MainMenuScript : MonoBehaviour
 
     public bool showControls, serverOnly;
 
-    public GameObject mainMenu, controlsMenu;
+    public GameObject mainMenu, controlsMenu, hostOption;
 
     void Start()
     {
+        //hostOption.SetActive(true);
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
         manager = FindObjectOfType<NetworkManager>();
@@ -66,6 +67,7 @@ public class MainMenuScript : MonoBehaviour
     {
         if (host)
         {
+            //FindObjectOfType<HostOptions>().isHost = true;
             manager.StartHost();
         }
         else

@@ -25,10 +25,19 @@ public class TeamManager : MonoBehaviour
 
     public bool gameStarted, pickedRole, doThisOnce, testing;
 
-    public int role;
+    public int role, playerAmount;
 
     private void Start()
     {
+        //HostOptions host;
+        //foreach (HostOptions hostOptions in FindObjectsOfType<HostOptions>())
+        //{
+        //    if (hostOptions.isHost)
+        //    {
+        //        host = hostOptions;
+        //        playerAmount = host.playerAmount;
+        //    }
+        //}
         doThisOnce = false;
         gameStarted = false;
         pickedRole = false;
@@ -60,7 +69,7 @@ public class TeamManager : MonoBehaviour
         CheckForReadyPlayers();
         CheckForNullRefs();
 
-        if ((playersConnected.Count >= 4 || testing) && !doThisOnce && !gameStarted && playersConnected.Count == playersReady.Count && playersConnected.Count > 0)
+        if ((playersConnected.Count >= playerAmount || testing) && !doThisOnce && !gameStarted && playersConnected.Count == playersReady.Count && playersConnected.Count > 0)
         {
             fader.SetBool("InFade", true);
             StartGame();

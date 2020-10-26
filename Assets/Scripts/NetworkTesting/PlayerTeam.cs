@@ -61,6 +61,7 @@ public class PlayerTeam : NetworkBehaviour
     {
         if (isServer)
         {
+            readyText.GetComponentInChildren<TextMeshProUGUI>().text = "Press start when all players are ready";
             leaveButtonText.text = "Stop Host";
         }
         else
@@ -509,7 +510,7 @@ public class PlayerTeam : NetworkBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.R) && isLocalPlayer)
+        if (Input.GetKeyDown(KeyCode.R) && isLocalPlayer && !isServer)
         {
             Debug.Log(gameObject.name + " is ready", gameObject);
             isReady = true;
@@ -524,6 +525,16 @@ public class PlayerTeam : NetworkBehaviour
             Application.Quit();
         }*/
     }
+
+    public void HostReady()
+    {
+        Debug.Log(gameObject.name + " is ready", gameObject);
+        isReady = true;
+        readyText.GetComponentInChildren<TextMeshProUGUI>().text = "You are ready!";
+        readyText.GetComponentInChildren<TextMeshProUGUI>().color = Color.green;
+        CmdReadyUp(true);
+    }
+
 
     [Command]
     void CmdReadyUp(bool b)

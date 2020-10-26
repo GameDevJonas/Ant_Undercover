@@ -17,8 +17,20 @@ public class Anterrogation : MonoBehaviour
 
     public Collider hitbox;
 
+    public int usesLeft;
+
     void Start()
     {
+        //HostOptions host;
+        //foreach (HostOptions hostOptions in FindObjectsOfType<HostOptions>())
+        //{
+        //    if (hostOptions.isHost)
+        //    {
+        //        host = hostOptions;
+        //        usesLeft = host.anterrogations;
+        //    }
+        //}
+
         activatedUI = false;
         myMinimapObj.SetActive(false);
         myCam.gameObject.SetActive(false);
@@ -107,5 +119,10 @@ public class Anterrogation : MonoBehaviour
         ExitAnterrogation(false);
         timer = timerSet;
         startAnterrogation = false;
+    }
+
+    public void GetUses()
+    {
+
     }
 }

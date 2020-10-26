@@ -12,7 +12,7 @@ public class PileGoal : MonoBehaviour
 
     public int objectsPlaced, objectsNeeded;
 
-    public float repairTimerMax, repairTimer, repairValue;
+    public float repairTimerMax, repairTimer, repairValue, sabotageTime;
 
     public bool playerInRange, spyInRange, sabotaged;
 
@@ -35,6 +35,18 @@ public class PileGoal : MonoBehaviour
 
     void Start()
     {
+        //HostOptions host;
+        //foreach (HostOptions hostOptions in FindObjectsOfType<HostOptions>())
+        //{
+        //    if (hostOptions.isHost)
+        //    {
+        //        host = hostOptions;
+        //        repairTimerMax = host.repairTime;
+        //        repairValue = host.repairValue;
+        //        sabotageTime = host.taskSpeed + host.taskSpeed / 4;
+        //    }
+        //}
+
         myTask = GetComponent<Task>();
         myTask.spyMinimapObj.SetActive(false);
         myTask.myTaskType = Task.TaskType.pile;
@@ -257,8 +269,8 @@ public class PileGoal : MonoBehaviour
         if (myState == GoalState.inProgress)
         {
             //Debug.Log(i / 5);
-            spyCanvas.GetComponentInChildren<Image>().fillAmount = i / 5;
-            if (i >= 5)
+            spyCanvas.GetComponentInChildren<Image>().fillAmount = i / sabotageTime;
+            if (i >= sabotageTime)
             {
                 sabotaged = true;
                 player.canSabotage = false;
