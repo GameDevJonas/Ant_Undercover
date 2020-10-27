@@ -8,7 +8,7 @@ public class PlayerPileTask : NetworkBehaviour
 {
     public bool holdingItem, canPickUp, canDeliver, arrowOn, canSabotage, sabotageReload;
 
-    public float holdingSpeed, normalSpeed, policeSpeed, sabotageValue, reloadTimer, sabotageCooldown, sabotageTime;
+    public float holdingSpeed, normalSpeed, policeSpeed, sabotageValue, reloadTimer, sabotageCooldown, sabotageTime, deliveryTime, pickupTime, deliveryPickupTimer;
 
     public Transform holdPoint;
 
@@ -21,7 +21,7 @@ public class PlayerPileTask : NetworkBehaviour
     public string holding, myRole;
 
     public Animator civillianAnim, spyAnim, spyPickup;
-    public Image spySabotager;
+    public Image spySabotager, workerTimeSlider, spyTimeSlider;
 
     void Start()
     {
@@ -54,6 +54,10 @@ public class PlayerPileTask : NetworkBehaviour
             }
         }
         canSabotage = true;
+
+        workerTimeSlider.fillAmount = 0;
+
+        spyTimeSlider.fillAmount = 0;
     }
 
     public void TurnOffAnim()
@@ -105,7 +109,7 @@ public class PlayerPileTask : NetworkBehaviour
         else
         {
             spyAnim.GetComponent<Image>().fillAmount = reloadTimer / sabotageCooldown;
-            Debug.Log(reloadTimer / sabotageCooldown);
+            //Debug.Log(reloadTimer / sabotageCooldown);
             reloadTimer += Time.deltaTime;
         }
     }
@@ -240,9 +244,8 @@ public class PlayerPileTask : NetworkBehaviour
             holdingItem = false;
         }
         else*/
-        #endregion
 
-        if (holdingItem && canDeliver && Input.GetKeyDown(KeyCode.E) && isLocalPlayer /*&& currentGoal.spyInRange*/)
+        /*if (holdingItem && canDeliver && Input.GetKeyDown(KeyCode.E) && isLocalPlayer && currentGoal.spyInRange)
         {
             if (holding == "Leaf")
             {
@@ -266,6 +269,58 @@ public class PlayerPileTask : NetworkBehaviour
             //holding = null;
             //canDeliver = false;
             //holdingItem = false;
+        }*/
+        #endregion
+        if (holdingItem && canDeliver && isLocalPlayer)
+        {
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                deliveryPickupTimer = 0;
+
+                if (myRole == "civillian")
+                {
+                    workerTimeSlider.fillAmount = deliveryPickupTimer / deliveryTime;
+                }
+            }
+            if (Input.GetKey(KeyCode.E))
+            {
+                if (deliveryPickupTimer >= deliveryTime)
+                {
+                    if (holding == "Leaf")
+                    {
+                        CmdPutOnGoal("Leaf", myRole);
+                    }
+                    else if (holding == "Stick")
+                    {
+                        CmdPutOnGoal("Stick", myRole);
+                    }
+                    civillianAnim.SetBool("IsIdle", true);
+                    deliveryPickupTimer = deliveryTime;
+
+                    if (myRole == "civillian")
+                    {
+                        workerTimeSlider.fillAmount = 0;
+                    }
+                }
+                else
+                {
+                    deliveryPickupTimer += Time.deltaTime;
+                    if (myRole == "civillian")
+                    {
+                        workerTimeSlider.fillAmount = deliveryPickupTimer / deliveryTime;
+                    }
+                }
+
+            }
+            if (Input.GetKeyUp(KeyCode.E))
+            {
+                deliveryPickupTimer = 0;
+
+                if (myRole == "civillian")
+                {
+                    workerTimeSlider.fillAmount = 0;
+                }
+            }
         }
     }
 
@@ -304,30 +359,83 @@ public class PlayerPileTask : NetworkBehaviour
     #region Pickup and release NOT ON GOAL
     void PickUpRelease()
     {
-        if (Input.GetKeyDown(KeyCode.E) && isLocalPlayer)
+        if (isLocalPlayer)
         {
             if (holdingItem)
             {
                 if (!canDeliver)
                 {
-                    if (holding == "Leaf")
+                    if (Input.GetKeyDown(KeyCode.E))
                     {
-                        //leafObj.SetActive(false);
-                        CmdObjectsOnOff("Leaf", false);
-                        //if (isServer)
-                        //RpcObjectsOnOff("Leaf", false);
+                        //deliveryPickupTimer = pickupTime;
+                        if (holding == "Leaf")
+                        {
+                            //leafObj.SetActive(false);
+                            CmdObjectsOnOff("Leaf", false);
+                            //if (isServer)
+                            //RpcObjectsOnOff("Leaf", false);
+                        }
+                        else if (holding == "Stick")
+                        {
+                            //stickObj.SetActive(false);
+                            CmdObjectsOnOff("Stick", false);
+                            //if (isServer)
+                            //RpcObjectsOnOff("Stick", false);
+                        }
+                        spyPickup.SetBool("IsIdle", true);
+                        civillianAnim.SetBool("IsIdle", true);
                     }
-                    else if (holding == "Stick")
+                    if (Input.GetKey(KeyCode.E))
                     {
-                        //stickObj.SetActive(false);
-                        CmdObjectsOnOff("Stick", false);
-                        //if (isServer)
-                        //RpcObjectsOnOff("Stick", false);
+                        /*if (deliveryPickupTimer <= 0)
+                        {
+                            if (holding == "Leaf")
+                            {
+                                //leafObj.SetActive(false);
+                                CmdObjectsOnOff("Leaf", false);
+                                //if (isServer)
+                                //RpcObjectsOnOff("Leaf", false);
+                            }
+                            else if (holding == "Stick")
+                            {
+                                //stickObj.SetActive(false);
+                                CmdObjectsOnOff("Stick", false);
+                                //if (isServer)
+                                //RpcObjectsOnOff("Stick", false);
+                            }
+                            spyPickup.SetBool("IsIdle", true);
+                            civillianAnim.SetBool("IsIdle", true);
+                            deliveryPickupTimer = pickupTime;
+                        }
+                        else
+                        {
+                            deliveryPickupTimer -= Time.deltaTime;
+                        }
                     }
-                    spyPickup.SetBool("IsIdle", true);
-                    civillianAnim.SetBool("IsIdle", true);
-                    //holding = null;
-                    //holdingItem = false;
+                    if (Input.GetKeyUp(KeyCode.E))
+                    {
+                        deliveryPickupTimer = pickupTime;
+                    }*/
+
+                        /*if (holding == "Leaf")
+                        {
+                            //leafObj.SetActive(false);
+                            CmdObjectsOnOff("Leaf", false);
+                            //if (isServer)
+                            //RpcObjectsOnOff("Leaf", false);
+                        }
+                        else if (holding == "Stick")
+                        {
+                            //stickObj.SetActive(false);
+                            CmdObjectsOnOff("Stick", false);
+                            //if (isServer)
+                            //RpcObjectsOnOff("Stick", false);
+                        }
+                        spyPickup.SetBool("IsIdle", true);
+                        civillianAnim.SetBool("IsIdle", true);
+                        //holding = null;
+                        //holdingItem = false;*/
+                    }
                 }
             }
             else if (!holdingItem)
@@ -336,7 +444,70 @@ public class PlayerPileTask : NetworkBehaviour
                 {
                     if (currentPile.objectsReady > 0)
                     {
-                        holding = currentPile.what;
+                        if (Input.GetKeyDown(KeyCode.E))
+                        {
+                            deliveryPickupTimer = 0;
+                            if (myRole == "civillian")
+                            {
+                                workerTimeSlider.fillAmount = 0;
+                            }
+                            else if (myRole == "spy")
+                            {
+                                spyTimeSlider.fillAmount = 0;
+                            }
+                        }
+                        if (Input.GetKey(KeyCode.E))
+                        {
+                            if (deliveryPickupTimer >= pickupTime)
+                            {
+                                holding = currentPile.what;
+                                if (holding == "Leaf")
+                                {
+                                    CmdObjectsOnOff("Leaf", true);
+                                }
+                                else if (holding == "Stick")
+                                {
+                                    CmdObjectsOnOff("Stick", true);
+                                }
+                                deliveryPickupTimer = pickupTime;
+
+                                if (myRole == "civillian")
+                                {
+                                    workerTimeSlider.fillAmount = 0;
+                                }
+                                else if (myRole == "spy")
+                                {
+                                    spyTimeSlider.fillAmount = 0;
+                                }
+                            }
+                            else
+                            {
+                                Debug.Log(deliveryTime);
+                                deliveryPickupTimer += Time.deltaTime;
+                                if (myRole == "civillian")
+                                {
+                                    workerTimeSlider.fillAmount = deliveryPickupTimer / pickupTime;
+                                }
+                                else if (myRole == "spy")
+                                {
+                                    spyTimeSlider.fillAmount = deliveryPickupTimer / pickupTime;
+                                }
+                            }
+                        }
+                        if (Input.GetKeyUp(KeyCode.E))
+                        {
+                            deliveryPickupTimer = 0;
+                            if (myRole == "civillian")
+                            {
+                                workerTimeSlider.fillAmount = 0;
+                            }
+                            else if (myRole == "spy")
+                            {
+                                spyTimeSlider.fillAmount = 0;
+                            }
+                        }
+
+                        /*holding = currentPile.what;
                         if (holding == "Leaf")
                         {
                             //leafObj.SetActive(true);
@@ -353,7 +524,7 @@ public class PlayerPileTask : NetworkBehaviour
                         }
                         //currentPile.TakeObject();
                         //holdingItem = true;
-                        //currentPile = null;
+                        //currentPile = null;*/
                     }
                 }
             }
@@ -469,6 +640,7 @@ public class PlayerPileTask : NetworkBehaviour
             currentPile = null;
             spyPickup.SetBool("IsIdle", true);
             civillianAnim.SetBool("IsIdle", true);
+            deliveryPickupTimer = pickupTime;
         }
         /*
         if (other.gameObject.GetComponent<TestingGoal>() && holdingItem)
@@ -483,12 +655,14 @@ public class PlayerPileTask : NetworkBehaviour
             currentGoal = null;
             spyPickup.SetBool("IsIdle", true);
             civillianAnim.SetBool("IsIdle", true);
+            deliveryPickupTimer = deliveryTime;
         }
         else if (other.gameObject.GetComponent<PileGoal>())
         {
             currentGoal = null;
             spyPickup.SetBool("IsIdle", true);
             civillianAnim.SetBool("IsIdle", true);
+            deliveryPickupTimer = deliveryTime;
         }
     }
 }

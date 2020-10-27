@@ -50,12 +50,17 @@ public class Anterrogation : MonoBehaviour
                 myMinimapObj.SetActive(true);
                 activatedUI = true;
             }
+            if (usesLeft < 1)
+            {
+                ableToAnterrogate = false;
+            }
         }
         if (startAnterrogation)
         {
             AnterrogationTimer();
         }
         myMinimapObj.GetComponent<Animator>().SetBool("IsIdle", startAnterrogation);
+
     }
 
     public void DoAnAnterrogation(GameObject policePlayer, GameObject otherPlayer)
@@ -73,6 +78,7 @@ public class Anterrogation : MonoBehaviour
         otherPlayer.GetComponent<CharacterController>().enabled = false;
         otherPlayer.GetComponent<PlayerAnterrogationBehaviour>().ChangeCam(myCam, 11);
         ableToAnterrogate = false;
+        usesLeft--;
         startAnterrogation = true;
     }
 
@@ -121,8 +127,4 @@ public class Anterrogation : MonoBehaviour
         startAnterrogation = false;
     }
 
-    public void GetUses()
-    {
-
-    }
 }

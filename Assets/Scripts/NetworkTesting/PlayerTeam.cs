@@ -33,6 +33,8 @@ public class PlayerTeam : NetworkBehaviour
 
     public GameObject policeSprite, civillianSprite, spySprite, policeUI, civillianUI, spyUI, readyText;
 
+    public Animator roleAnim, tasksAnim;
+
 
     private void Awake()
     {
@@ -55,6 +57,7 @@ public class PlayerTeam : NetworkBehaviour
         mesh = GetComponentInChildren<MeshFilter>();
         manager = FindObjectOfType<TeamManager>();
         mesh.mesh = manager.teamMeshes[1];
+        tasksAnim = FindObjectOfType<TaskUI>().myAnim;
     }
 
     private void Start()
@@ -519,6 +522,19 @@ public class PlayerTeam : NetworkBehaviour
             CmdReadyUp(true);
         }
 
+        if(FindObjectOfType<TeamManager>().gameStarted && isLocalPlayer)
+        {
+            if (Input.GetKey(KeyCode.Tab))
+            {
+                roleAnim.SetBool("IsIdle", false);
+                tasksAnim.SetBool("IsIdle", false);
+            }
+            else
+            {
+                roleAnim.SetBool("IsIdle", true);
+                tasksAnim.SetBool("IsIdle", true);
+            }
+        }
 
         /*if (Input.GetKeyDown(KeyCode.Escape) && isLocalPlayer)
         {

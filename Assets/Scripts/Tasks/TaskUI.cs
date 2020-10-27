@@ -20,6 +20,8 @@ public class TaskUI : MonoBehaviour
 
     public GameObject myGameObject, workerUI, policeUI;
 
+    public Animator myAnim;
+
     void Start()
     {
         activeTasks.Capacity = 3;

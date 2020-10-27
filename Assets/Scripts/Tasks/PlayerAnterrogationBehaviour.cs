@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 using Mirror;
+using TMPro;
 
 public class PlayerAnterrogationBehaviour : NetworkBehaviour
 {
@@ -19,6 +20,7 @@ public class PlayerAnterrogationBehaviour : NetworkBehaviour
     public Collider hitbox;
 
     public Animator myAnim;
+    public TextMeshProUGUI anterrogationText;
 
     void Start()
     {
@@ -42,6 +44,8 @@ public class PlayerAnterrogationBehaviour : NetworkBehaviour
             {
                 myAnim.SetBool("IsIdle", true);
             }
+
+            anterrogationText.text = manager.usesLeft + "";
 
             if (isLocalPlayer && Input.GetKeyDown(KeyCode.E) && playerInRange && manager.ableToAnterrogate)
             {

@@ -199,6 +199,7 @@ public class TeamManager : MonoBehaviour
         #endregion
         foreach (PlayerTeam player in playersReady)
         {
+            player.GetComponent<HostOptions>().hostCanvas.SetActive(false);
             Debug.Log(player, player);
             roleList.PickRoles();
         }

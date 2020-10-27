@@ -65,6 +65,10 @@ public class RoundManager : MonoBehaviour
         {
             spyWinObj.SetActive(spyWin);
             policeWinObj.SetActive(!spyWin);
+            foreach(PileGoal pileGoal in FindObjectsOfType<PileGoal>())
+            {
+                pileGoal.enabled = false;
+            }
             Invoke("SendToMainMenu", 5f);
         }
     }

@@ -34,6 +34,8 @@ public class PlayerMovement : NetworkBehaviour
             GetComponentInChildren<Canvas>().gameObject.SetActive(false);
         }
         controller = gameObject.GetComponent<CharacterController>();
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
         //Cursor.visible = false;
         //Cursor.lockState = CursorLockMode.Locked;
     }
@@ -50,24 +52,27 @@ public class PlayerMovement : NetworkBehaviour
             GetInputs();
             RotatePlayer();
             MovePlayer();
-            if(xInput != 0 && yInput != 0)
+            if (xInput != 0 && yInput != 0)
             {
                 float playerS = playerSpeed / 2;
                 playerSpeed = playerS;
             }
-            if (Input.GetKeyDown(KeyCode.Escape))
+            if (FindObjectOfType<TeamManager>().gameStarted)
             {
-                cursorVisible = !cursorVisible;
-            }
-            if (cursorVisible)
-            {
-                Cursor.visible = true;
-                Cursor.lockState = CursorLockMode.None;
-            }
-            else
-            {
-                Cursor.visible = false;
-                Cursor.lockState = CursorLockMode.Locked;
+                if (Input.GetKeyDown(KeyCode.Escape))
+                {
+                    cursorVisible = !cursorVisible;
+                }
+                if (cursorVisible)
+                {
+                    Cursor.visible = true;
+                    Cursor.lockState = CursorLockMode.None;
+                }
+                else
+                {
+                    Cursor.visible = false;
+                    Cursor.lockState = CursorLockMode.Locked;
+                }
             }
         }
     }
