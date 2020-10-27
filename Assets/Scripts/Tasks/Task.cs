@@ -8,7 +8,7 @@ public class Task : MonoBehaviour
 
     public GameObject myMinimapObj, spyMinimapObj;
 
-    public enum TaskType { pile};
+    public enum TaskType { pile };
     public TaskType myTaskType;
 
     public string goalName;
@@ -31,7 +31,7 @@ public class Task : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(taskUI == null)
+        if (taskUI == null)
         {
             taskUI = FindObjectOfType<TaskUI>();
         }
@@ -42,7 +42,7 @@ public class Task : MonoBehaviour
             myMinimapObj.SetActive(true);
         }
 
-        else if(!showOnUi)
+        else if (!showOnUi)
         {
             taskUI.CloseUiObject(myMinimapObj);
             myMinimapObj.SetActive(false);
@@ -56,8 +56,13 @@ public class Task : MonoBehaviour
         {
             taskUI.RemoveTask(this);
             removed = true;
-            this.enabled = false;
+            Invoke("TurnOff", .5f);
         }
+    }
+
+    void TurnOff()
+    {
+        this.enabled = false;
     }
 
     public void LoadTask(int uiPlacement)

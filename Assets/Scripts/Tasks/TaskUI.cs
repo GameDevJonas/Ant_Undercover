@@ -133,6 +133,7 @@ public class TaskUI : MonoBehaviour
             workerUis[t].myGameObject.SetActive(false);
             Debug.Log("Removed " + task.goalName + " of index: " + t);
             activeTasks[t] = null;
+            task.active = false;
             GetNewTask(t);
         }
         else if (localPlayerRole == "police")

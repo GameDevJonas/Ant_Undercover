@@ -285,6 +285,7 @@ public class PileGoal : MonoBehaviour
     void DoneState()
     {
         myTask.done = true;
+        //myTask.active = false;
     }
     #endregion
 

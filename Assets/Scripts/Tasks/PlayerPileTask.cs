@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class PlayerPileTask : NetworkBehaviour
 {
-    public bool holdingItem, canPickUp, canDeliver, arrowOn, canSabotage, sabotageReload;
+    public bool holdingItem, canPickUp, canDeliver, arrowOn, canSabotage, sabotageReload, deliverPickupTrigger;
 
     public float holdingSpeed, normalSpeed, policeSpeed, sabotageValue, reloadTimer, sabotageCooldown, sabotageTime, deliveryTime, pickupTime, deliveryPickupTimer;
 
@@ -58,6 +58,8 @@ public class PlayerPileTask : NetworkBehaviour
         workerTimeSlider.fillAmount = 0;
 
         spyTimeSlider.fillAmount = 0;
+
+        deliverPickupTrigger = false;
     }
 
     public void TurnOffAnim()
@@ -105,6 +107,7 @@ public class PlayerPileTask : NetworkBehaviour
             canSabotage = true;
             reloadTimer = 0;
             sabotageReload = false;
+            deliverPickupTrigger = false;
         }
         else
         {
@@ -271,7 +274,7 @@ public class PlayerPileTask : NetworkBehaviour
             //holdingItem = false;
         }*/
         #endregion
-        if (holdingItem && canDeliver && isLocalPlayer)
+        if (holdingItem && canDeliver && isLocalPlayer && !deliverPickupTrigger)
         {
             if (Input.GetKeyDown(KeyCode.E))
             {
@@ -286,6 +289,13 @@ public class PlayerPileTask : NetworkBehaviour
             {
                 if (deliveryPickupTimer >= deliveryTime)
                 {
+                    civillianAnim.SetBool("IsIdle", true);
+                    deliveryPickupTimer = deliveryTime;
+
+                    if (myRole == "civillian")
+                    {
+                        workerTimeSlider.fillAmount = 0;
+                    }
                     if (holding == "Leaf")
                     {
                         CmdPutOnGoal("Leaf", myRole);
@@ -294,13 +304,7 @@ public class PlayerPileTask : NetworkBehaviour
                     {
                         CmdPutOnGoal("Stick", myRole);
                     }
-                    civillianAnim.SetBool("IsIdle", true);
-                    deliveryPickupTimer = deliveryTime;
-
-                    if (myRole == "civillian")
-                    {
-                        workerTimeSlider.fillAmount = 0;
-                    }
+                    deliverPickupTrigger = true;
                 }
                 else
                 {
@@ -320,6 +324,7 @@ public class PlayerPileTask : NetworkBehaviour
                 {
                     workerTimeSlider.fillAmount = 0;
                 }
+                deliverPickupTrigger = false;
             }
         }
     }
@@ -354,6 +359,7 @@ public class PlayerPileTask : NetworkBehaviour
         canDeliver = false;
         holdingItem = false;
         currentGoal = null;
+        deliverPickupTrigger = false;
     }
 
     #region Pickup and release NOT ON GOAL
@@ -456,19 +462,10 @@ public class PlayerPileTask : NetworkBehaviour
                                 spyTimeSlider.fillAmount = 0;
                             }
                         }
-                        if (Input.GetKey(KeyCode.E))
+                        if (Input.GetKey(KeyCode.E) && !deliverPickupTrigger)
                         {
                             if (deliveryPickupTimer >= pickupTime)
                             {
-                                holding = currentPile.what;
-                                if (holding == "Leaf")
-                                {
-                                    CmdObjectsOnOff("Leaf", true);
-                                }
-                                else if (holding == "Stick")
-                                {
-                                    CmdObjectsOnOff("Stick", true);
-                                }
                                 deliveryPickupTimer = pickupTime;
 
                                 if (myRole == "civillian")
@@ -479,6 +476,16 @@ public class PlayerPileTask : NetworkBehaviour
                                 {
                                     spyTimeSlider.fillAmount = 0;
                                 }
+                                holding = currentPile.what;
+                                if (holding == "Leaf")
+                                {
+                                    CmdObjectsOnOff("Leaf", true);
+                                }
+                                else if (holding == "Stick")
+                                {
+                                    CmdObjectsOnOff("Stick", true);
+                                }
+                                deliverPickupTrigger = true;
                             }
                             else
                             {
@@ -505,6 +512,7 @@ public class PlayerPileTask : NetworkBehaviour
                             {
                                 spyTimeSlider.fillAmount = 0;
                             }
+                            deliverPickupTrigger = false;
                         }
 
                         /*holding = currentPile.what;
@@ -553,7 +561,14 @@ public class PlayerPileTask : NetworkBehaviour
     [ClientRpc]
     public void RpcObjectsOnOff(string item, bool r)
     {
-        holding = item;
+        if (r)
+        {
+            holding = item;
+        }
+        else if (!r)
+        {
+            holding = null;
+        }
         if (item == "Leaf")
         {
             leafObj.SetActive(r);
@@ -562,13 +577,15 @@ public class PlayerPileTask : NetworkBehaviour
         {
             stickObj.SetActive(r);
         }
-        if (r == true)
+        if (r)
         {
             currentPile.TakeObject();
         }
         //if(!isServer)
         holdingItem = r;
         currentPile = null;
+        deliveryPickupTimer = 0;
+        deliverPickupTrigger = false;
         //if (!r)
         //{
         //    holding = null;
