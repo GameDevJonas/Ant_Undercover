@@ -23,19 +23,30 @@ public class FundsManager : NetworkBehaviour
 
         if (timer <= 0)
         {
-            RpcSyncFunds(1);
+            RpcAddFunds(1);
             timer = timerSet;
         }
         else
         {
             timer -= Time.deltaTime;
         }
+
+        if(funds < 0)
+        {
+            RpcSetFunds(0);
+        }
     }
 
     [ClientRpc]
-    void RpcSyncFunds(int newValue)
+    public void RpcAddFunds(int newValue)
     {
         funds = funds + newValue;
+    }
+
+    [ClientRpc]
+    void RpcSetFunds(int newValue)
+    {
+        funds = newValue;
     }
 
     [ClientRpc]

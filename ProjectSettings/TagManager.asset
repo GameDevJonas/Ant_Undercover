@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - PlayerHitbox
+  - FundTask
   layers:
   - Default
   - TransparentFX

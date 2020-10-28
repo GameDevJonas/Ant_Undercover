@@ -13,7 +13,7 @@ public class PlayerAnterrogationBehaviour : NetworkBehaviour
 
     public PlayerTeam player;
 
-    public bool playerInRange;
+    public bool playerInRange, fundTaskInRange;
 
     public GameObject playerInRangeOf, policeUI;
 
@@ -24,6 +24,7 @@ public class PlayerAnterrogationBehaviour : NetworkBehaviour
 
     void Start()
     {
+        fundTaskInRange = false;
         policeUI.SetActive(false);
         myCam = GetComponentInChildren<CinemachineFreeLook>();
         manager = FindObjectOfType<Anterrogation>();
@@ -51,6 +52,25 @@ public class PlayerAnterrogationBehaviour : NetworkBehaviour
             {
                 Debug.Log("Started anterrogation with " + this.gameObject + " as police, and " + playerInRangeOf.gameObject + "as other player.");
                 CmdCallArrogation(playerInRangeOf);
+            }
+
+            if (isLocalPlayer && Input.GetKeyDown(KeyCode.E) && fundTaskInRange)
+            {
+                manager.OpenUI();
+                if (!manager.myCanvas.activeSelf)
+                {
+                    GetComponent<PlayerMovement>().enabled = true;
+                    //GetComponent<PlayerMovement>().cursorVisible = false;
+                    Cursor.visible = false;
+                    Cursor.lockState = CursorLockMode.Locked;
+                }
+                else
+                {
+                    GetComponent<PlayerMovement>().enabled = false;
+                    Cursor.visible = true;
+                    Cursor.lockState = CursorLockMode.None;
+                    //GetComponent<PlayerMovement>().cursorVisible = true;
+                }
             }
         }
     }
@@ -135,6 +155,14 @@ public class PlayerAnterrogationBehaviour : NetworkBehaviour
             playerInRange = false;
             playerInRangeOf = null;
         }
+
+        if (other.CompareTag("FundTask"))
+        {
+            if (player.myTeam == TeamManager.PlayerTeams.police)
+            {
+                fundTaskInRange = true;
+            }
+        }
     }
 
     private void OnTriggerExit(Collider other)
@@ -143,6 +171,14 @@ public class PlayerAnterrogationBehaviour : NetworkBehaviour
         {
             playerInRange = false;
             playerInRangeOf = null;
+        }
+
+        if (other.CompareTag("FundTask"))
+        {
+            if (player.myTeam == TeamManager.PlayerTeams.police)
+            {
+                fundTaskInRange = false;
+            }
         }
     }
 }

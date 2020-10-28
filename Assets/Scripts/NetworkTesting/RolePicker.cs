@@ -60,7 +60,7 @@ public class RolePicker : NetworkBehaviour
                     break;
                 case 1: //Worker
                     player = playerRoles[1].gameObject;
-                    role = 0;
+                    role = 1;
                     RpcPickRoles(role, player);
                     break;
                 case 2: //Spy

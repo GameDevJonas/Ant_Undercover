@@ -10,7 +10,7 @@ public class PlayerMovement : NetworkBehaviour
 
     private CharacterController controller;
     private Vector3 playerVelocity;
-    private bool groundedPlayer, cursorVisible;
+    public bool groundedPlayer, cursorVisible;
     public float playerSpeed = 2.0f;
     public float jumpHeight = 1.0f;
     public float gravityValue = -9.81f;

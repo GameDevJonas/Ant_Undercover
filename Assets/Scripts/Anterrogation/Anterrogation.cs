@@ -5,7 +5,9 @@ using Cinemachine;
 
 public class Anterrogation : MonoBehaviour
 {
-    public GameObject door, policeP, otherP, myMinimapObj;
+    public List<SecurityCam> cams = new List<SecurityCam>();
+
+    public GameObject door, policeP, otherP, myMinimapObj, myCanvas;
 
     public Transform policePlace, otherPlace, exitOne, exitTwo;
 
@@ -38,6 +40,7 @@ public class Anterrogation : MonoBehaviour
         startAnterrogation = false;
         ableToAnterrogate = true;
         timer = timerSet;
+        myCanvas.SetActive(false);
     }
 
     // Update is called once per frame
@@ -45,7 +48,7 @@ public class Anterrogation : MonoBehaviour
     {
         if (FindObjectOfType<TeamManager>().gameStarted)
         {
-            if(manager == null)
+            if (manager == null)
             {
                 manager = FindObjectOfType<FundsManager>();
             }
@@ -53,7 +56,7 @@ public class Anterrogation : MonoBehaviour
             {
                 funds = manager.funds;
             }
-            
+
             myCam.gameObject.SetActive(true);
             if (!activatedUI)
             {
@@ -64,7 +67,7 @@ public class Anterrogation : MonoBehaviour
             {
                 ableToAnterrogate = false;
             }
-            else if(!startAnterrogation)
+            else if (!startAnterrogation)
             {
                 ableToAnterrogate = true;
             }
@@ -103,6 +106,7 @@ public class Anterrogation : MonoBehaviour
         policeP.GetComponent<PlayerMovement>().enabled = true;
         policeP.GetComponent<CharacterController>().enabled = true;
         policeP.GetComponent<PlayerAnterrogationBehaviour>().ChangeCam(myCam, 9);
+        policeP.GetComponent<PlayerAnterrogationBehaviour>().playerInRange = false;
         otherP.GetComponent<PlayerMovement>().enabled = true;
         otherP.GetComponent<CharacterController>().enabled = true;
         otherP.GetComponent<PlayerAnterrogationBehaviour>().ChangeCam(myCam, 9);
@@ -139,6 +143,23 @@ public class Anterrogation : MonoBehaviour
         ExitAnterrogation(false);
         timer = timerSet;
         startAnterrogation = false;
+    }
+
+    public void TurnOnOffCam(SecurityCam cam)
+    {
+        if (!cam.isServer)
+        {
+            cam.CmdTurnOnOff(!cam.isOn);
+        }
+        else
+        {
+            cam.RpcTurnOnOff(!cam.isOn);
+        }
+    }
+
+    public void OpenUI()
+    {
+        myCanvas.SetActive(!myCanvas.activeSelf);
     }
 
 }

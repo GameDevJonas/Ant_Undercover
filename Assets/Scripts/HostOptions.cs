@@ -19,7 +19,7 @@ public class HostOptions : NetworkBehaviour
     [Tooltip("Police player speed")] public float policeSpeed; //Police player speed
 
     [Header("Ability settings")]
-    [Tooltip("Total number of total anterrogations")] public int anterrogations; //Number of total anterrogations
+    [Tooltip("Total number of total anterrogations")] public int startingFunds; //Number of total anterrogations
     [Tooltip("How long the sabotage cooldown is")] public float sabotageCooldown; //How long sabotage cool timer is
     [Tooltip("How long object pickup/task deliver/sabotage time is")] public float taskSpeed; //How long object pickup/task deliver/sabotage time is
     [Tooltip("How long sabotaged objects need to repair")] public float repairTime;
@@ -59,7 +59,7 @@ public class HostOptions : NetworkBehaviour
             settings[2].text = normalSpeed + "";
             settings[3].text = holdingSpeed + "";
             settings[4].text = policeSpeed + "";
-            settings[5].text = anterrogations + "";
+            settings[5].text = startingFunds + "";
             settings[6].text = sabotageCooldown + "";
             settings[7].text = taskSpeed + "";
             settings[8].text = repairTime + "";
@@ -153,7 +153,7 @@ public class HostOptions : NetworkBehaviour
     public void UpdateAnterrogations(TMP_InputField input)
     {
         int value = int.Parse(input.text);
-        anterrogations = value;
+        startingFunds = value;
     }
     public void UpdateSabotageCooldown(TMP_InputField input)
     {
@@ -183,7 +183,7 @@ public class HostOptions : NetworkBehaviour
         GetComponent<PlayerTeam>().HostReady();
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
-        RpcApplySettings(gameTime, playerAmount, holdingSpeed, normalSpeed, policeSpeed, sabotageCooldown, taskSpeed, anterrogations, repairTime, repairValue);
+        RpcApplySettings(gameTime, playerAmount, holdingSpeed, normalSpeed, policeSpeed, sabotageCooldown, taskSpeed, startingFunds, repairTime, repairValue);
     }
 
     [ClientRpc]
@@ -196,7 +196,7 @@ public class HostOptions : NetworkBehaviour
         policeSpeed = pS;
         sabotageCooldown = sC;
         taskSpeed = tS;
-        anterrogations = a;
+        startingFunds = a;
         repairTime = rT;
         repairValue = rV;
 
@@ -212,7 +212,7 @@ public class HostOptions : NetworkBehaviour
             playerPiletask.deliveryTime = taskSpeed;
             playerPiletask.pickupTime = taskSpeed - taskSpeed / 4;
         }
-        FindObjectOfType<Anterrogation>().manager.funds = anterrogations;
+        FindObjectOfType<FundsManager>().funds = startingFunds;
         foreach (PileGoal pileGoal in FindObjectsOfType<PileGoal>())
         {
             pileGoal.repairTimerMax = repairTime;
@@ -258,7 +258,7 @@ public class HostOptions : NetworkBehaviour
             playerPiletask.sabotageCooldown = sabotageCooldown;
             playerPiletask.sabotageTime = taskSpeed + taskSpeed / 4;
         }
-        FindObjectOfType<Anterrogation>().manager.funds = anterrogations;
+        FindObjectOfType<Anterrogation>().manager.funds = startingFunds;
         foreach (PileGoal pileGoal in FindObjectsOfType<PileGoal>())
         {
             pileGoal.repairTimerMax = repairTime;
