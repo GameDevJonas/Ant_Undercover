@@ -45,7 +45,7 @@ public class PlayerAnterrogationBehaviour : NetworkBehaviour
                 myAnim.SetBool("IsIdle", true);
             }
 
-            anterrogationText.text = manager.usesLeft + "";
+            anterrogationText.text = manager.manager.funds + "";
 
             if (isLocalPlayer && Input.GetKeyDown(KeyCode.E) && playerInRange && manager.ableToAnterrogate)
             {

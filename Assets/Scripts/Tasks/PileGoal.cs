@@ -67,7 +67,7 @@ public class PileGoal : MonoBehaviour
     void Update()
     {
         StateUpdate();
-        if (serverOnly == null)
+        if (serverOnly == null && FindObjectOfType<TeamManager>().gameStarted)
         {
             if (player.myRole == "spy")
             {

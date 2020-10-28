@@ -17,7 +17,9 @@ public class Anterrogation : MonoBehaviour
 
     public Collider hitbox;
 
-    public int usesLeft;
+    public int funds;
+
+    public FundsManager manager;
 
     void Start()
     {
@@ -30,7 +32,6 @@ public class Anterrogation : MonoBehaviour
         //        usesLeft = host.anterrogations;
         //    }
         //}
-
         activatedUI = false;
         myMinimapObj.SetActive(false);
         myCam.gameObject.SetActive(false);
@@ -44,15 +45,28 @@ public class Anterrogation : MonoBehaviour
     {
         if (FindObjectOfType<TeamManager>().gameStarted)
         {
+            if(manager == null)
+            {
+                manager = FindObjectOfType<FundsManager>();
+            }
+            else
+            {
+                funds = manager.funds;
+            }
+            
             myCam.gameObject.SetActive(true);
             if (!activatedUI)
             {
                 myMinimapObj.SetActive(true);
                 activatedUI = true;
             }
-            if (usesLeft < 1)
+            if (funds < 30)
             {
                 ableToAnterrogate = false;
+            }
+            else if(!startAnterrogation)
+            {
+                ableToAnterrogate = true;
             }
         }
         if (startAnterrogation)
@@ -78,7 +92,7 @@ public class Anterrogation : MonoBehaviour
         otherPlayer.GetComponent<CharacterController>().enabled = false;
         otherPlayer.GetComponent<PlayerAnterrogationBehaviour>().ChangeCam(myCam, 11);
         ableToAnterrogate = false;
-        usesLeft--;
+        manager.RpcRemoveFunds(30);
         startAnterrogation = true;
     }
 

@@ -212,7 +212,7 @@ public class HostOptions : NetworkBehaviour
             playerPiletask.deliveryTime = taskSpeed;
             playerPiletask.pickupTime = taskSpeed - taskSpeed / 4;
         }
-        FindObjectOfType<Anterrogation>().usesLeft = anterrogations;
+        FindObjectOfType<Anterrogation>().manager.funds = anterrogations;
         foreach (PileGoal pileGoal in FindObjectsOfType<PileGoal>())
         {
             pileGoal.repairTimerMax = repairTime;
@@ -258,7 +258,7 @@ public class HostOptions : NetworkBehaviour
             playerPiletask.sabotageCooldown = sabotageCooldown;
             playerPiletask.sabotageTime = taskSpeed + taskSpeed / 4;
         }
-        FindObjectOfType<Anterrogation>().usesLeft = anterrogations;
+        FindObjectOfType<Anterrogation>().manager.funds = anterrogations;
         foreach (PileGoal pileGoal in FindObjectsOfType<PileGoal>())
         {
             pileGoal.repairTimerMax = repairTime;

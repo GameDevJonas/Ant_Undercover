@@ -52,7 +52,7 @@ public class RolePicker : NetworkBehaviour
             {
                 case 0: //Police
                     player = playerRoles[0].gameObject;
-                    role = 1;
+                    role = 0;
                     //player.GetComponent<PlayerTeam>().PickPolice();
                     //if (player.GetComponent<PlayerTeam>().isLocalPlayer)
                         //debugText.text = "police";
@@ -60,7 +60,7 @@ public class RolePicker : NetworkBehaviour
                     break;
                 case 1: //Worker
                     player = playerRoles[1].gameObject;
-                    role = 1;
+                    role = 0;
                     RpcPickRoles(role, player);
                     break;
                 case 2: //Spy
