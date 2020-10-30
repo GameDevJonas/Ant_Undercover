@@ -17,6 +17,8 @@ public class MainMenuScript : MonoBehaviour
 
     public GameObject mainMenu, controlsMenu, hostOption;
 
+    public Button host, settings, join, quit, fullscreen;
+
     void Start()
     {
         //hostOption.SetActive(true);
@@ -40,6 +42,13 @@ public class MainMenuScript : MonoBehaviour
     {
         mainMenu.SetActive(!showControls);
         controlsMenu.SetActive(showControls);
+
+        host.interactable = !manager.isNetworkActive;
+        settings.interactable = !manager.isNetworkActive;
+        join.interactable = !manager.isNetworkActive;
+        quit.interactable = !manager.isNetworkActive;
+        fullscreen.interactable = !manager.isNetworkActive;
+        input.interactable = !manager.isNetworkActive;
     }
 
     public void ControlsOnOff()

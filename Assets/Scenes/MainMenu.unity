@@ -2243,6 +2243,11 @@ MonoBehaviour:
   mainMenu: {fileID: 1226549884}
   controlsMenu: {fileID: 287005769}
   hostOption: {fileID: 255212215}
+  host: {fileID: 828602260}
+  settings: {fileID: 2059084633}
+  join: {fileID: 1752163442}
+  quit: {fileID: 2051774919}
+  fullscreen: {fileID: 1489947277}
 --- !u!4 &1285522680
 Transform:
   m_ObjectHideFlags: 0
@@ -2419,7 +2424,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: -398.55, y: 0}
-  m_SizeDelta: {x: 734.3, y: 2011.45}
+  m_SizeDelta: {x: 734.3, y: 4242.86}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1461409162
 MonoBehaviour:
@@ -2441,17 +2446,35 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\nHow to play:\r\n\nTeams: \r\nA.N.T = Police\r\nM.A.U.R = Spies\r\nWorkers\r\n\r\nPolice:
-    \nThe police currently has no gameplay features.\r \n\nWorkers:\nThe workers
-    and police can win if they finish building the leaf pile. They can do this by
-    collecting leaves and bringing it to the leaf pile. If they complete the pile
-    before the timer runs out, they win.\n\nSpies: \nThe spies can win if the leaf
-    pile is not finished when the time runs out. To achieve this, they can sabotage
-    the pile, and the workers need to repair it. \r\n\nRepair: \nIf the pile is sabotaged
-    it will repair itself over a period of time. Workers can also bring sticks to
-    the pile to speed up the process.\r\n\nMinimap: \nOn the minimap you can see
-    where the different players and objectives are located.\n\r\n\n(This prototype
-    does not represent the full game, and more features will come in the future)\n\n"
+  m_text: "\nHow to play:\r\n\nTeams: \r\nA.N.T = Police\r\nM.A.U.R = Spies\r\nWorkers\r\n\n\nPolice:
+    \nThe police players main goal is to stop spies from sabotaging, and help the
+    workers finish tasks. They can not pick up or do any tasks, but they have information
+    on all tasks that needs to be done, and where they are on the minimap. \nTo anterrogate
+    a suspicious ant, the police needs to collect funds, and anterrogation costs
+    30 funds. To do this, the police needs to do paperwork. In the police office
+    you can find a desk, and open the paperwork-menu with \"E\". While in this menu,
+    each police get 10 funds per second.\nWhile in this menu, their vision of the
+    mound is very reduced, and therefore have the option to turn on security cameras.
+    They cost 5 funds to turn on, and 5 funds per second to maintain uptime. Be careful,
+    the other players can see if a camera is on. \n\nWorkers:\nThe workers and police
+    can win if they finish all the tasks. They can do this by collecting the specified
+    object and bringing it to the target marked on the minimap. If they complete
+    the tasks before the timer runs out, they win.\n\nSpies: \nThe spies can win
+    if the tasks are not finished when the time runs out. To achieve this, they can
+    sabotage certain places, and the workers need to repair them. \r\n\nRepair: \nIf
+    a target is sabotaged it will repair itself over a period of time. Workers can
+    also bring sticks to the target to speed up the process.\r\n\nUI:\nPlayers can
+    hold \"Tab\" to expand the information on-screen. In the left bottom corner,
+    players can see their interractive circle. When this lights up, press and/or
+    hold down \"E\" to interract. \nIn the top left corner, police and workers have
+    their task-information.\n\nMinimap: \nThe minimap contains a lot of information.
+    Players are marked on the minimap, but not all players can see eachother. Every
+    player can see themselves. Police and workers can see police players. Spies can
+    see the police, and other spies.\nPolice can always see every target that needs
+    to be done.\nWhen a worker holds an object that one of their tasks need, the
+    target shows up on the minimap.\n\rSpies can see every target they can sabotage.\n\n(This
+    prototype does not represent the full game, and more features will come in the
+    future)\n\n"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: dfe8b41e9938fbc43b303b83f5818b7d, type: 2}
   m_sharedMaterial: {fileID: 1209516586684642407, guid: dfe8b41e9938fbc43b303b83f5818b7d, type: 2}
@@ -2574,7 +2597,7 @@ RectTransform:
   m_Father: {fileID: 1830783699}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.77290016}
+  m_AnchorMin: {x: 0, y: 0.8923368}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
@@ -3057,7 +3080,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1478561288}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.22709987
+  m_Size: 0.10766324
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

@@ -6,7 +6,7 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Task))]
 public class PileGoal : MonoBehaviour
 {
-    Task myTask;
+    public Task myTask;
 
     public string whatDoINeed;
 

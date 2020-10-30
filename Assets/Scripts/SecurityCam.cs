@@ -69,7 +69,7 @@ public class SecurityCam : NetworkBehaviour
         }
     }
 
-    [Command]
+    [Command(ignoreAuthority = true)]
     public void CmdTurnOnOff(bool v)
     {
         RpcTurnOnOff(v);

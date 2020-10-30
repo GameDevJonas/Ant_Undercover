@@ -4,6 +4,8 @@ using UnityEngine;
 using Cinemachine;
 using Mirror;
 using TMPro;
+using System.Threading;
+using UnityEngine.UI;
 
 public class PlayerAnterrogationBehaviour : NetworkBehaviour
 {
@@ -13,17 +15,23 @@ public class PlayerAnterrogationBehaviour : NetworkBehaviour
 
     public PlayerTeam player;
 
-    public bool playerInRange, fundTaskInRange;
+    public bool playerInRange, fundTaskInRange, working;
+
+    public float fundTimer, fundTimerSet;
+    public int fundValue;
 
     public GameObject playerInRangeOf, policeUI;
 
     public Collider hitbox;
 
     public Animator myAnim;
-    public TextMeshProUGUI anterrogationText;
+    public TextMeshProUGUI fundsText, costText;
+
+    public Button jailButton;
 
     void Start()
     {
+        working = false;
         fundTaskInRange = false;
         policeUI.SetActive(false);
         myCam = GetComponentInChildren<CinemachineFreeLook>();
@@ -37,7 +45,7 @@ public class PlayerAnterrogationBehaviour : NetworkBehaviour
     {
         if (player.myTeam == TeamManager.PlayerTeams.police)
         {
-            if (isLocalPlayer && manager.ableToAnterrogate && playerInRange)
+            if (isLocalPlayer && (manager.ableToAnterrogate && playerInRange) || fundTaskInRange)
             {
                 myAnim.SetBool("IsIdle", false);
             }
@@ -46,7 +54,13 @@ public class PlayerAnterrogationBehaviour : NetworkBehaviour
                 myAnim.SetBool("IsIdle", true);
             }
 
-            anterrogationText.text = manager.manager.funds + "";
+            //float sliderValue = (manager.manager.funds) / 30f;
+            //Debug.Log(sliderValue);
+            //myAnim.GetComponent<Image>().fillAmount = sliderValue;
+
+            fundsText.text = manager.manager.funds + "";
+
+            costText.text = manager.manager.currentCost + "";
 
             if (isLocalPlayer && Input.GetKeyDown(KeyCode.E) && playerInRange && manager.ableToAnterrogate)
             {
@@ -54,11 +68,22 @@ public class PlayerAnterrogationBehaviour : NetworkBehaviour
                 CmdCallArrogation(playerInRangeOf);
             }
 
+            if(manager.manager.funds < 200)
+            {
+                jailButton.interactable = false;
+            }
+            else
+            {
+                jailButton.interactable = true;
+            }
+
             if (isLocalPlayer && Input.GetKeyDown(KeyCode.E) && fundTaskInRange)
             {
                 manager.OpenUI();
                 if (!manager.myCanvas.activeSelf)
                 {
+                    fundTimer = 0;
+                    working = false;
                     GetComponent<PlayerMovement>().enabled = true;
                     //GetComponent<PlayerMovement>().cursorVisible = false;
                     Cursor.visible = false;
@@ -66,10 +91,35 @@ public class PlayerAnterrogationBehaviour : NetworkBehaviour
                 }
                 else
                 {
+                    fundTimer = 0;
+                    working = true;
                     GetComponent<PlayerMovement>().enabled = false;
                     Cursor.visible = true;
                     Cursor.lockState = CursorLockMode.None;
                     //GetComponent<PlayerMovement>().cursorVisible = true;
+                }
+            }
+
+            if (isLocalPlayer && working)
+            {
+                manager.manager.filler.fillAmount = fundTimer / fundTimerSet;
+                if (fundTimer >= fundTimerSet)
+                {
+                    if (isClientOnly)
+                    {
+                        Debug.Log("Is client");
+                        manager.manager.CmdAddFunds(fundValue);
+                    }
+                    else
+                    {
+                        Debug.Log("Is server");
+                        manager.manager.RpcAddFunds(fundValue);
+                    }
+                    fundTimer = 0;
+                }
+                else
+                {
+                    fundTimer += Time.deltaTime;
                 }
             }
         }

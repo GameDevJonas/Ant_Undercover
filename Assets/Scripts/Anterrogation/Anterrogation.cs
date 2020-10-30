@@ -133,6 +133,7 @@ public class Anterrogation : MonoBehaviour
 
     public void ThrowInJail()
     {
+        manager.RpcRemoveFunds(200);
         ExitAnterrogation(true);
         timer = timerSet;
         startAnterrogation = false;
@@ -150,6 +151,7 @@ public class Anterrogation : MonoBehaviour
         if (!cam.isServer)
         {
             cam.CmdTurnOnOff(!cam.isOn);
+            //cam.RpcTurnOnOff(!cam.isOn);
         }
         else
         {

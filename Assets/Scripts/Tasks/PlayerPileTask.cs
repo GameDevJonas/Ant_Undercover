@@ -119,7 +119,7 @@ public class PlayerPileTask : NetworkBehaviour
 
     void SabotageUpdate()
     {
-        if (canSabotage && isLocalPlayer && currentGoal != null && myRole == "spy")
+        if (canSabotage && isLocalPlayer && currentGoal != null && myRole == "spy" && !currentGoal.myTask.done && !currentGoal.sabotaged)
         {
             spyAnim.SetBool("IsIdle", false);
             if (Input.GetKeyDown(KeyCode.E))
@@ -289,7 +289,6 @@ public class PlayerPileTask : NetworkBehaviour
             {
                 if (deliveryPickupTimer >= deliveryTime)
                 {
-                    civillianAnim.SetBool("IsIdle", true);
                     deliveryPickupTimer = deliveryTime;
 
                     if (myRole == "civillian")
@@ -304,6 +303,7 @@ public class PlayerPileTask : NetworkBehaviour
                     {
                         CmdPutOnGoal("Stick", myRole);
                     }
+                    civillianAnim.SetBool("IsIdle", true);
                     deliverPickupTrigger = true;
                 }
                 else
