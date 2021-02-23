@@ -9,6 +9,10 @@ public class PlayerUI : NetworkBehaviour
 {
     public PlayerTeam playerParent;
 
+    [SyncVar]
+    public string myName;
+    public TextMeshProUGUI nameTextUi;
+
     public RawImage passBack;
     public TextMeshProUGUI nameText, roleText;
     public Canvas myCanvas;
@@ -29,22 +33,38 @@ public class PlayerUI : NetworkBehaviour
         switch (playerParent.myTeam)
         {
             case TeamManager.PlayerTeams.police:
-                MakePassPort(0);
+                CmdMakePassPort(0);
                 break;
             case TeamManager.PlayerTeams.civillian:
-                MakePassPort(1);
+                CmdMakePassPort(1);
                 break;
             case TeamManager.PlayerTeams.spy:
-                MakePassPort(2);
+                CmdMakePassPort(2);
                 break;
         }
     }
 
-    void MakePassPort(int role)
+    [Command]
+    void CmdMakePassPort(int role)
     {
+        myName = names[Random.Range(0, names.Length)];
+        //myName = names[Random.Range(0, names.Length)];
+        //passBack.texture = passports[role];
+        //roleText.text = roleName[role];
+        //roleText.color = roleColors[role];
+        //nameText.text = myName;
+        //nameTextUi.text = myName;
+        RpcMakePassPort(role, myName);
+    }
+
+    [ClientRpc]
+    public void RpcMakePassPort(int role, string name)
+    {
+        myName = name;
         passBack.texture = passports[role];
         roleText.text = roleName[role];
         roleText.color = roleColors[role];
-        nameText.text = names[Random.Range(0, names.Length)];
+        nameText.text = myName;
+        nameTextUi.text = myName;
     }
 }
