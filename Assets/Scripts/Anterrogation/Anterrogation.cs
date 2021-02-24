@@ -23,6 +23,8 @@ public class Anterrogation : MonoBehaviour
 
     public FundsManager manager;
 
+    public AudioSource anterrogationSound, jailSound;
+
     void Start()
     {
         //HostOptions host;
@@ -82,6 +84,7 @@ public class Anterrogation : MonoBehaviour
 
     public void DoAnAnterrogation(GameObject policePlayer, GameObject otherPlayer)
     {
+        anterrogationSound.Play();
         policeP = policePlayer;
         otherP = otherPlayer;
         policePlayer.transform.position = policePlace.position;
@@ -133,6 +136,7 @@ public class Anterrogation : MonoBehaviour
 
     public void ThrowInJail()
     {
+        jailSound.Play();
         manager.RpcRemoveFunds(200);
         ExitAnterrogation(true);
         timer = timerSet;

@@ -18,6 +18,11 @@ public class PlayerMovement : NetworkBehaviour
     public float xInput;
     public float yInput;
 
+    public AudioClip[] stepClips;
+    public AudioSource stepsAudio;
+    public float stepInterval;
+    float stepTimer;
+
     public GameObject model;
     public CinemachineFreeLook cam;
 
@@ -26,6 +31,7 @@ public class PlayerMovement : NetworkBehaviour
 
     private void Start()
     {
+        stepTimer = 0;
         manager = FindObjectOfType<TeamManager>();
         cam = GetComponentInChildren<CinemachineFreeLook>();
         if (!isLocalPlayer)
@@ -52,6 +58,7 @@ public class PlayerMovement : NetworkBehaviour
             GetInputs();
             RotatePlayer();
             MovePlayer();
+            PlayerSteps();
             if (xInput != 0 && yInput != 0)
             {
                 float playerS = playerSpeed / 2;
@@ -77,9 +84,22 @@ public class PlayerMovement : NetworkBehaviour
         }
     }
 
-    private void FixedUpdate()
+    public void PlayerSteps()
     {
-
+        if(xInput != 0 || yInput != 0)
+        {
+            if(stepTimer <= 0)
+            {
+                stepsAudio.clip = stepClips[Random.Range(0, stepClips.Length)];
+                stepsAudio.pitch = Random.Range(0.8f, 1.3f);
+                stepsAudio.Play();
+                stepTimer = stepInterval;
+            }
+            else
+            {
+                stepTimer -= Time.deltaTime;
+            }
+        }
     }
 
     void GetInputs()

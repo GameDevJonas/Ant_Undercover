@@ -16,6 +16,8 @@ public class Pile : MonoBehaviour
 
     public string what;
 
+    public AudioSource myPickupAudio;
+
     void Start()
     {
         playerInRange = false;
@@ -97,7 +99,10 @@ public class Pile : MonoBehaviour
     public void TakeObject()
     {
         if (objectsReady > 0)
+        {
             objectsReady--;
+            myPickupAudio.Play();
+        }
     }
 
     void AddObject()

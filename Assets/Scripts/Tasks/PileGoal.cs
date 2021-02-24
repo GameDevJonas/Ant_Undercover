@@ -33,6 +33,8 @@ public class PileGoal : MonoBehaviour
 
     public ServerOnlyScript serverOnly;
 
+    public AudioSource placeObjAudio, sabotagedAudio, finishedAudio;
+
     void Start()
     {
         //HostOptions host;
@@ -157,6 +159,7 @@ public class PileGoal : MonoBehaviour
             case GoalState.inProgress:
                 if (item == whatDoINeed && role == "civillian")
                 {
+                    placeObjAudio.Play();
                     PlaceObject();
                 }
                 else
@@ -169,6 +172,7 @@ public class PileGoal : MonoBehaviour
             case GoalState.sabotaged:
                 if (item == whatDoINeed && role == "civillian")
                 {
+                    placeObjAudio.Play();
                     ReduceTimer();
                 }
                 break;
@@ -187,6 +191,7 @@ public class PileGoal : MonoBehaviour
         UpdatePile();
         if (objectsPlaced >= objectsNeeded)
         {
+            finishedAudio.Play();
             myState = GoalState.done;
         }
 
@@ -275,6 +280,7 @@ public class PileGoal : MonoBehaviour
                 sabotaged = true;
                 player.canSabotage = false;
                 spyCanvas.GetComponentInChildren<Image>().fillAmount = 0;
+                sabotagedAudio.Play();
                 myState = GoalState.sabotaged;
             }
         }

@@ -29,6 +29,7 @@ public class PlayerAnterrogationBehaviour : NetworkBehaviour
 
     public Button jailButton;
 
+    public AudioSource paperWorkAudio;
     void Start()
     {
         working = false;
@@ -105,6 +106,8 @@ public class PlayerAnterrogationBehaviour : NetworkBehaviour
                 manager.manager.filler.fillAmount = fundTimer / fundTimerSet;
                 if (fundTimer >= fundTimerSet)
                 {
+                    paperWorkAudio.pitch = Random.Range(.8f, 1.3f);
+                    paperWorkAudio.Play();
                     if (isClientOnly)
                     {
                         Debug.Log("Is client");
