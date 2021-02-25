@@ -219,7 +219,7 @@ public class TeamManager : MonoBehaviour
         foreach (PlayerMovement player in playersConnected)
         {
             player.GetComponent<CharacterController>().enabled = false;
-            Vector3 position = new Vector3(Random.Range(spawnArea.bounds.min.x, spawnArea.bounds.max.x), 1.12f, Random.Range(spawnArea.bounds.min.z, spawnArea.bounds.max.z));
+            Vector3 position = new Vector3(Random.Range(spawnArea.bounds.min.x, spawnArea.bounds.max.x), spawnArea.transform.position.y, Random.Range(spawnArea.bounds.min.z, spawnArea.bounds.max.z));
             player.gameObject.transform.position = position;
         }
         //fader.ResetTrigger("DoFade");
