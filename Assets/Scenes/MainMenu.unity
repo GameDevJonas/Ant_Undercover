@@ -1088,7 +1088,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2658963855455848147, guid: 3c2aeda7b21acd54d844df471d267f82, type: 3}
       propertyPath: onlineScene
-      value: Assets/Scenes/Maurtue.unity
+      value: Assets/Scenes/Maurtue_V2.unity
       objectReference: {fileID: 0}
     - target: {fileID: 2658963855455848149, guid: 3c2aeda7b21acd54d844df471d267f82, type: 3}
       propertyPath: showGUI

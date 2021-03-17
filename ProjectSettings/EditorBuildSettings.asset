@@ -12,6 +12,9 @@ EditorBuildSettings:
     path: Assets/Scenes/MainMenu.unity
     guid: 525a440b65a6a42478f953bfed78a8bb
   - enabled: 1
+    path: Assets/Scenes/Maurtue_V2.unity
+    guid: a21cd760988bc0d44925b0859d12fc99
+  - enabled: 0
     path: Assets/Scenes/Maurtue.unity
     guid: 6192afa174598414793c2d6d8490c185
   - enabled: 0

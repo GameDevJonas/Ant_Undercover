@@ -7,7 +7,7 @@ TerrainLayer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Pine
-  m_DiffuseTexture: {fileID: 0}
+  m_DiffuseTexture: {fileID: 2800000, guid: efe3e79be72b929438b1e4fd145d0e18, type: 3}
   m_NormalMapTexture: {fileID: 0}
   m_MaskMapTexture: {fileID: 0}
   m_TileSize: {x: 2, y: 2}
