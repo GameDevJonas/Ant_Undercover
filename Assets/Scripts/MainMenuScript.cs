@@ -32,8 +32,8 @@ public class MainMenuScript : MonoBehaviour
         else
         {
             showControls = false;
-            Screen.fullScreenMode = FullScreenMode.FullScreenWindow;
-            SceneManager.LoadScene(2, LoadSceneMode.Additive);
+            //Screen.fullScreenMode = FullScreenMode.FullScreenWindow;
+            //SceneManager.LoadScene(2, LoadSceneMode.Additive);
         }
     }
 
@@ -63,7 +63,7 @@ public class MainMenuScript : MonoBehaviour
 
     public void ToggleFullscreen()
     {
-        Screen.fullScreen = !Screen.fullScreen;
+        //Screen.fullScreen = !Screen.fullScreen;
     }
 
     public void IpChanged()

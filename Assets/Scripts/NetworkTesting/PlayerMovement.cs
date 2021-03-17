@@ -11,6 +11,7 @@ public class PlayerMovement : NetworkBehaviour
     private CharacterController controller;
     private Vector3 playerVelocity;
     public bool groundedPlayer, cursorVisible;
+    public float oGSpeed;
     public float playerSpeed = 2.0f;
     public float jumpHeight = 1.0f;
     public float gravityValue = -9.81f;
@@ -26,11 +27,17 @@ public class PlayerMovement : NetworkBehaviour
     public GameObject model;
     public CinemachineFreeLook cam;
 
+    public Animator myAnim;
+
+    [SyncVar]
+    public bool isWalking;
+
     //Evt legge til on start local player
 
 
     private void Start()
     {
+
         stepTimer = 0;
         manager = FindObjectOfType<TeamManager>();
         cam = GetComponentInChildren<CinemachineFreeLook>();
@@ -53,17 +60,26 @@ public class PlayerMovement : NetworkBehaviour
 
     void Update()
     {
+        myAnim.SetBool("IsWalking", isWalking);
         if (isLocalPlayer)
         {
+            if (oGSpeed < 4)
+            {
+                oGSpeed = playerSpeed;
+            }
             GetInputs();
             RotatePlayer();
             MovePlayer();
             PlayerSteps();
-            if (xInput != 0 && yInput != 0)
-            {
-                float playerS = playerSpeed / 2;
-                playerSpeed = playerS;
-            }
+            //if (xInput != 0 && yInput != 0)
+            //{
+            //    float playerS = oGSpeed / 2;
+            //    playerSpeed = playerS;
+            //}
+            //else
+            //{
+            //    playerSpeed = oGSpeed;
+            //}
             if (FindObjectOfType<TeamManager>().gameStarted)
             {
                 if (Input.GetKeyDown(KeyCode.Escape))
@@ -86,9 +102,13 @@ public class PlayerMovement : NetworkBehaviour
 
     public void PlayerSteps()
     {
-        if(xInput != 0 || yInput != 0)
+        if (xInput != 0 || yInput != 0)
         {
-            if(stepTimer <= 0)
+            if (!isWalking)
+            {
+                CmdIsWalking(true);
+            }
+            if (stepTimer <= 0)
             {
                 stepsAudio.clip = stepClips[Random.Range(0, stepClips.Length)];
                 stepsAudio.pitch = Random.Range(0.8f, 1.3f);
@@ -100,8 +120,23 @@ public class PlayerMovement : NetworkBehaviour
                 stepTimer -= Time.deltaTime;
             }
         }
+        else if (isWalking)
+        {
+            CmdIsWalking(false);
+        }
     }
 
+    [Command]
+    public void CmdIsWalking(bool t)
+    {
+        isWalking = t;
+    }
+
+    [Command]
+    public void CmdDoJump()
+    {
+        myAnim.SetTrigger("DoJump");
+    }
     void GetInputs()
     {
         xInput = Input.GetAxisRaw("Horizontal");
@@ -123,6 +158,7 @@ public class PlayerMovement : NetworkBehaviour
 
             if (Input.GetButton("Jump"))
             {
+                CmdDoJump();
                 playerVelocity.y = jumpHeight;
             }
         }

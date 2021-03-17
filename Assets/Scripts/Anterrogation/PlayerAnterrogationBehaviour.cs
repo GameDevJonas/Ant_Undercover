@@ -15,12 +15,12 @@ public class PlayerAnterrogationBehaviour : NetworkBehaviour
 
     public PlayerTeam player;
 
-    public bool playerInRange, fundTaskInRange, working;
+    public bool playerInRange, fundTaskInRange, working, sirenOn;
 
     public float fundTimer, fundTimerSet;
     public int fundValue;
 
-    public GameObject playerInRangeOf, policeUI;
+    public GameObject playerInRangeOf, policeUI, siren;
 
     public Collider hitbox;
 
@@ -101,6 +101,29 @@ public class PlayerAnterrogationBehaviour : NetworkBehaviour
                 }
             }
 
+            if(isLocalPlayer && manager.manager.funds >= 50 && !sirenOn && Input.GetKeyDown(KeyCode.Q)) //Turn on police siren
+            {
+                sirenOn = true;
+                GetComponent<PlayerMovement>().playerSpeed = GetComponent<PlayerPileTask>().policeSpeed;
+                GetComponent<PlayerMovement>().oGSpeed = GetComponent<PlayerPileTask>().policeSpeed;
+                CmdTurnOnSiren();
+                if (isClientOnly)
+                {
+                    Debug.Log("Is client");
+                    manager.manager.CmdRemoveFunds(50);
+                }
+                else
+                {
+                    Debug.Log("Is server");
+                    manager.manager.RpcRemoveFunds(50);
+                }
+                Invoke("CmdTurnOffSiren", 10);
+            }
+            if (!sirenOn)
+            {
+                GetComponent<PlayerMovement>().playerSpeed = GetComponent<PlayerPileTask>().normalSpeed;
+            }
+
             if (isLocalPlayer && working)
             {
                 manager.manager.filler.fillAmount = fundTimer / fundTimerSet;
@@ -126,6 +149,30 @@ public class PlayerAnterrogationBehaviour : NetworkBehaviour
                 }
             }
         }
+    }
+
+    [Command]
+    public void CmdTurnOnSiren()
+    {
+        RpcTurnOnSiren();
+    }
+    [ClientRpc]
+    public void RpcTurnOnSiren()
+    {
+        siren.SetActive(true);
+        sirenOn = true;
+    }
+
+    [Command]
+    public void CmdTurnOffSiren()
+    {
+        RpcTurnOffSiren();
+    }
+    [ClientRpc]
+    public void RpcTurnOffSiren()
+    {
+        siren.SetActive(false);
+        sirenOn = false;
     }
 
     public void OpenUI()

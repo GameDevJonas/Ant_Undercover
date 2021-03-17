@@ -18,7 +18,7 @@ public class PlayerTeam : NetworkBehaviour
 
     public PlayerUI ui;
 
-    public GameObject MAURMustache;
+    public GameObject MAURMustache, ANTHat;
 
     MeshFilter mesh;
 
@@ -35,6 +35,7 @@ public class PlayerTeam : NetworkBehaviour
 
     public Animator roleAnim, tasksAnim;
 
+    public AudioClip policeMusic, civillianMusic, spyMusic;
 
     private void Awake()
     {
@@ -53,10 +54,11 @@ public class PlayerTeam : NetworkBehaviour
         FindObjectOfType<TeamManager>().playersConnected.Add(GetComponentInParent<PlayerMovement>());
         FindObjectOfType<RolePicker>().unassignedPlayers.Add(this);
         MAURMustache.SetActive(false);
+        ANTHat.SetActive(false);
         //myCam = Camera.main;
         mesh = GetComponentInChildren<MeshFilter>();
         manager = FindObjectOfType<TeamManager>();
-        mesh.mesh = manager.teamMeshes[1];
+        //mesh.mesh = manager.teamMeshes[1];
         tasksAnim = FindObjectOfType<TaskUI>().myAnim;
     }
 
@@ -153,20 +155,20 @@ public class PlayerTeam : NetworkBehaviour
         {
             MAURMustache.SetActive(false);
             myTeam = role;
-            mesh.mesh = manager.teamMeshes[0];
+            // mesh.mesh = manager.teamMeshes[0];
             myCam.cullingMask = normalMask;
         }
         else if (role == TeamManager.PlayerTeams.civillian)
         {
             MAURMustache.SetActive(false);
             myTeam = role;
-            mesh.mesh = manager.teamMeshes[1];
+            //mesh.mesh = manager.teamMeshes[1];
             myCam.cullingMask = normalMask;
         }
         else
         {
             myTeam = role;
-            mesh.mesh = manager.teamMeshes[1];
+            //mesh.mesh = manager.teamMeshes[1];
             myCam.cullingMask = spyMask;
             MAURMustache.SetActive(true);
         }
@@ -181,20 +183,20 @@ public class PlayerTeam : NetworkBehaviour
         {
             MAURMustache.SetActive(false);
             myTeam = role;
-            mesh.mesh = manager.teamMeshes[0];
+            //mesh.mesh = manager.teamMeshes[0];
             myCam.cullingMask = normalMask;
         }
         else if (role == TeamManager.PlayerTeams.civillian)
         {
             MAURMustache.SetActive(false);
             myTeam = role;
-            mesh.mesh = manager.teamMeshes[1];
+            //mesh.mesh = manager.teamMeshes[1];
             myCam.cullingMask = normalMask;
         }
         else
         {
             myTeam = role;
-            mesh.mesh = manager.teamMeshes[1];
+            //mesh.mesh = manager.teamMeshes[1];
             myCam.cullingMask = spyMask;
             MAURMustache.SetActive(true);
         }
@@ -455,16 +457,24 @@ public class PlayerTeam : NetworkBehaviour
 
     public void PickPolice()
     {
+        if (isLocalPlayer)
+        {
+            AudioSource musicSource = GameObject.FindGameObjectWithTag("MainMusic").GetComponent<AudioSource>();
+            musicSource.Stop();
+            musicSource.clip = policeMusic;
+            musicSource.Play();
+        }
         readyText.SetActive(false);
         MAURMustache.SetActive(false);
         myTeam = TeamManager.PlayerTeams.police;
-        mesh.mesh = manager.teamMeshes[0];
+        //mesh.mesh = manager.teamMeshes[0];
         RpcSyncRoleWithClient(myTeam);
         if (isLocalPlayer)
         {
             //CmdSyncRoleWithServer(myTeam);
         }
         ui.MakeUI();
+        ANTHat.SetActive(true);
         myCam.cullingMask = normalMask;
         civillianUI.SetActive(false);
         policeUI.SetActive(true);
@@ -474,10 +484,17 @@ public class PlayerTeam : NetworkBehaviour
 
     public void PickWorker()
     {
+        if (isLocalPlayer)
+        {
+            AudioSource musicSource = GameObject.FindGameObjectWithTag("MainMusic").GetComponent<AudioSource>();
+            musicSource.Stop();
+            musicSource.clip = civillianMusic;
+            musicSource.Play();
+        }
         readyText.SetActive(false);
         MAURMustache.SetActive(false);
         myTeam = TeamManager.PlayerTeams.civillian;
-        mesh.mesh = manager.teamMeshes[1];
+        //mesh.mesh = manager.teamMeshes[1];
         RpcSyncRoleWithClient(myTeam);
         if (isLocalPlayer)
         {
@@ -493,9 +510,16 @@ public class PlayerTeam : NetworkBehaviour
 
     public void PickSpy()
     {
+        if (isLocalPlayer)
+        {
+            AudioSource musicSource = GameObject.FindGameObjectWithTag("MainMusic").GetComponent<AudioSource>();
+            musicSource.Stop();
+            musicSource.clip = spyMusic;
+            musicSource.Play();
+        }
         readyText.SetActive(false);
         myTeam = TeamManager.PlayerTeams.spy;
-        mesh.mesh = manager.teamMeshes[1];
+        //mesh.mesh = manager.teamMeshes[1];
         RpcSyncRoleWithClient(myTeam);
         if (isLocalPlayer)
         {
@@ -522,7 +546,7 @@ public class PlayerTeam : NetworkBehaviour
             CmdReadyUp(true);
         }
 
-        if(FindObjectOfType<TeamManager>().gameStarted && isLocalPlayer)
+        if (FindObjectOfType<TeamManager>().gameStarted && isLocalPlayer)
         {
             if (Input.GetKey(KeyCode.Tab))
             {

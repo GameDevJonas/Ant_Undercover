@@ -6,6 +6,7 @@ TagManager:
   tags:
   - PlayerHitbox
   - FundTask
+  - MainMusic
   layers:
   - Default
   - TransparentFX
