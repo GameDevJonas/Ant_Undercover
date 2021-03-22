@@ -106,6 +106,7 @@ public class PlayerMovement : NetworkBehaviour
         {
             if (!isWalking)
             {
+                isWalking = true;
                 CmdIsWalking(true);
             }
             if (stepTimer <= 0)
@@ -122,6 +123,7 @@ public class PlayerMovement : NetworkBehaviour
         }
         else if (isWalking)
         {
+            isWalking = false;
             CmdIsWalking(false);
         }
     }
@@ -137,6 +139,12 @@ public class PlayerMovement : NetworkBehaviour
     {
         myAnim.SetTrigger("DoJump");
     }
+    [ClientRpc]
+    public void RpcDoJump()
+    {
+        myAnim.SetTrigger("DoJump");
+    }
+
     void GetInputs()
     {
         xInput = Input.GetAxisRaw("Horizontal");
@@ -158,7 +166,9 @@ public class PlayerMovement : NetworkBehaviour
 
             if (Input.GetButton("Jump"))
             {
+                myAnim.SetTrigger("DoJump");
                 CmdDoJump();
+                RpcDoJump();
                 playerVelocity.y = jumpHeight;
             }
         }

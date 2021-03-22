@@ -15,12 +15,12 @@ public class PlayerAnterrogationBehaviour : NetworkBehaviour
 
     public PlayerTeam player;
 
-    public bool playerInRange, fundTaskInRange, working, sirenOn;
+    public bool playerInRange, fundTaskInRange, working, sirenOn, doorInRange;
 
     public float fundTimer, fundTimerSet;
     public int fundValue;
 
-    public GameObject playerInRangeOf, policeUI, siren;
+    public GameObject playerInRangeOf, policeUI, siren, jailDoor;
 
     public Collider hitbox;
 
@@ -32,6 +32,7 @@ public class PlayerAnterrogationBehaviour : NetworkBehaviour
     public AudioSource paperWorkAudio;
     void Start()
     {
+        jailDoor = GameObject.Find("NewDoor");
         working = false;
         fundTaskInRange = false;
         policeUI.SetActive(false);
@@ -46,7 +47,7 @@ public class PlayerAnterrogationBehaviour : NetworkBehaviour
     {
         if (player.myTeam == TeamManager.PlayerTeams.police)
         {
-            if (isLocalPlayer && (manager.ableToAnterrogate && playerInRange) || fundTaskInRange)
+            if (isLocalPlayer && (manager.ableToAnterrogate && playerInRange) || fundTaskInRange || doorInRange)
             {
                 myAnim.SetBool("IsIdle", false);
             }
@@ -99,6 +100,11 @@ public class PlayerAnterrogationBehaviour : NetworkBehaviour
                     Cursor.lockState = CursorLockMode.None;
                     //GetComponent<PlayerMovement>().cursorVisible = true;
                 }
+            }
+
+            if(isLocalPlayer && Input.GetKeyDown(KeyCode.E) && doorInRange) //OPEN CLOSE JAIL DOOR
+            {
+                CmdOpenCloseDoor();
             }
 
             if(isLocalPlayer && manager.manager.funds >= 50 && !sirenOn && Input.GetKeyDown(KeyCode.Q)) //Turn on police siren
@@ -225,12 +231,26 @@ public class PlayerAnterrogationBehaviour : NetworkBehaviour
     void CmdCallArrogation(GameObject otherP)
     {
         RpcCallArrogation(otherP);
+        RpcOpenCloseDoor(true);
     }
 
     [ClientRpc]
     void RpcCallArrogation(GameObject otherP)
     {
         manager.DoAnAnterrogation(this.gameObject, otherP);
+    }
+
+    [Command]
+    public void CmdOpenCloseDoor()
+    {
+        bool t = !jailDoor.activeSelf;
+        RpcOpenCloseDoor(t);
+    }
+
+    [ClientRpc]
+    public void RpcOpenCloseDoor(bool t)
+    {
+        jailDoor.SetActive(t);
     }
 
     public void ChangeCam(CinemachineVirtualCamera newCam, int priority)
@@ -263,6 +283,14 @@ public class PlayerAnterrogationBehaviour : NetworkBehaviour
                 fundTaskInRange = true;
             }
         }
+
+        if (other.CompareTag("JailDoor"))
+        {
+            if (player.myTeam == TeamManager.PlayerTeams.police)
+            {
+                doorInRange = true;
+            }
+        }
     }
 
     private void OnTriggerExit(Collider other)
@@ -278,6 +306,14 @@ public class PlayerAnterrogationBehaviour : NetworkBehaviour
             if (player.myTeam == TeamManager.PlayerTeams.police)
             {
                 fundTaskInRange = false;
+            }
+        }
+
+        if (other.CompareTag("JailDoor"))
+        {
+            if (player.myTeam == TeamManager.PlayerTeams.police)
+            {
+                doorInRange = false;
             }
         }
     }

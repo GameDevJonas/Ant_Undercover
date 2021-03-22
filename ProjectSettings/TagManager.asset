@@ -7,6 +7,7 @@ TagManager:
   - PlayerHitbox
   - FundTask
   - MainMusic
+  - JailDoor
   layers:
   - Default
   - TransparentFX
